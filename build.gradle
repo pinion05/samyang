@@ -25,15 +25,34 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	// JSP 지원을 위한 의존성
-	implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
-	implementation 'jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api'
-	implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl'
-	compileOnly 'org.projectlombok:lombok'
+	//boot devTools 관련 설정
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	runtimeOnly 'com.mysql:mysql-connector-j'
+	
+	//Lombok 관련 설정
+	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
+	
+	//Mybatis 쿼리와 관련된 부분을 단독으로 뺌 예전에는 ibatis 
+	//java가 컴파일 하는 과정에서 쿼리문이 다 공개됨 보안약점 쿼리문을 나누기 위해 개발됨
+	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.5'
+	
+	//HTML and JSP 확인 설정
+	//Spring Boot 3.0 미만
+	//implementation 'javax.servlet:jstl'
+	//implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
+	
+	//Spring Boot 3.0 이상
+	implementation 'jakarta.servlet:jakarta.servlet-api' //스프링부트 3.0 이상
+   	implementation 'jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api' //스프링부트 3.0 이상
+   	implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl' //스프링부트 3.0 이상
+	implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
+	
+	//JPA 설정
+	//implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	
+	//mysql Connector
+	runtimeOnly 'com.mysql:mysql-connector-j'
+	
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
