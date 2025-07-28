@@ -6,23 +6,30 @@
 #yml 방식
 #url 뒤에 붙는 ? 는 매개변수
 spring:
- application:
-#프로젝트명
-  name: 'samyang'
-  #접속할 데이터베이스 설정
- datasource: 
-  driver-class-name: com.mysql.cj.jdbc.Driver
-  url: jdbc:mysql://34.47.105.223/samyang?charsetEncoding=utf-8
-  username: root
-  password: 6VNS*Z$ARf~j17e=
+  application:
+    name: 'samyang'
+  datasource: 
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${DATABASE_URL:jdbc:mysql://34.47.105.223/samyang?charsetEncoding=utf-8&serverTimezone=Asia/Seoul}
+    username: ${DATABASE_USERNAME:root}
+    password: ${DATABASE_PASSWORD:6VNS*Z$ARf~j17e=}
    
- mvc:
-  view:
-   prefix: /views/
-   suffix: .jsp
+  mvc:
+    view:
+      prefix: /views/
+      suffix: .jsp
+
+  # JPA 설정 (향후 마이그레이션 대비)
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: none
    
 mybatis:
- mapper-locations: classpath:/mapper/*.xml
+  mapper-locations: classpath:/mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
   
   

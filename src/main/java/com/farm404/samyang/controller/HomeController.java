@@ -68,6 +68,7 @@ public class HomeController {
             return "home";
         } catch (Exception e) {
             model.addAttribute("errorMessage", "메인 페이지를 불러오는 중 오류가 발생했습니다.");
+            System.out.println(e);
             return "error";
         }
     }

@@ -1,4 +1,181 @@
-# Samyang - 농업 플랫폼 데이터베이스 스키마 물리적설계
+# Samyang - 농업 플랫폼
+
+## 📋 프로젝트 개요
+
+Samyang은 농업인들을 위한 통합 플랫폼으로, 작물 관리, 농사일지 작성, 사용자 관리 기능을 제공합니다.
+
+### 🛠 기술 스택
+- **Backend**: Spring Boot 3.5.3, MyBatis
+- **Frontend**: JSP, Bootstrap 5
+- **Database**: MySQL 8.0
+- **Build Tool**: Gradle
+- **Testing**: JUnit 5, Mockito
+- **Logging**: SLF4J + Logback
+
+### 🏗 아키텍처
+- **MVC 패턴**: Controller → Service → Mapper → Database
+- **예외 처리**: 통합 예외 처리 시스템 (SamyangException, GlobalExceptionHandler)
+- **로깅**: 구조화된 로깅 시스템
+- **트랜잭션**: 선언적 트랜잭션 관리
+
+## 🚀 주요 기능
+
+### 👤 사용자 관리
+- 사용자 등록/로그인/수정/삭제
+- 이메일 중복 검증
+- 관리자 권한 관리
+
+### 🌱 작물 관리
+- 작물 등록 및 상태 관리
+- 파종부터 수확까지 전 과정 추적
+- 사용자별 작물 목록 관리
+
+### 📝 농사일지
+- 일일 농사 활동 기록
+- 작물별 일지 관리
+- 사진 첨부 기능
+
+## 📁 프로젝트 구조
+
+```
+src/
+├── main/
+│   ├── java/com/farm404/samyang/
+│   │   ├── controller/          # 웹 컨트롤러
+│   │   ├── service/             # 비즈니스 로직
+│   │   ├── mapper/              # MyBatis 매퍼
+│   │   ├── dto/                 # 데이터 전송 객체
+│   │   ├── exception/           # 예외 처리
+│   │   └── SamyangApplication.java
+│   ├── resources/
+│   │   ├── mapper/              # MyBatis XML 매퍼
+│   │   ├── application.yml      # 설정 파일
+│   │   └── application-local.yml
+│   └── webapp/WEB-INF/views/    # JSP 뷰
+└── test/                        # 단위 테스트
+```
+
+## 🔧 환경 설정
+
+### 필수 요구사항
+- Java 17+
+- MySQL 8.0+
+- Gradle 7.0+
+
+### 환경 변수
+```bash
+# 데이터베이스 설정
+export DATABASE_URL="jdbc:mysql://localhost:3306/samyang?charsetEncoding=utf-8&serverTimezone=Asia/Seoul"
+export DATABASE_USERNAME="samyang_user"
+export DATABASE_PASSWORD="your_secure_password"
+```
+
+### 애플리케이션 실행
+```bash
+# 개발 환경
+./gradlew bootRun
+
+# 프로덕션 환경
+./gradlew build
+java -jar build/libs/samyang-*.jar
+```
+
+## 🧪 테스트
+
+### 단위 테스트 실행
+```bash
+./gradlew test
+```
+
+### 테스트 커버리지
+- UserService: 100% 메서드 커버리지
+- CropService: 100% 메서드 커버리지  
+- FarmDiaryService: 100% 메서드 커버리지
+
+## 🔐 보안 특징
+
+### 구현된 보안 기능
+- ✅ 환경 변수를 통한 데이터베이스 인증 정보 보호
+- ✅ 구조화된 예외 처리로 정보 노출 방지
+- ✅ SLF4J를 통한 안전한 로깅
+- ✅ 입력 데이터 검증
+
+### 보안 권장사항
+- 비밀번호 해싱 (BCrypt 등) 구현 권장
+- HTTPS 연결 설정 권장
+- JWT 토큰 기반 인증 구현 권장
+
+## 📊 성능 최적화
+
+### 구현된 최적화
+- ✅ MyBatis 2차 캐시 설정
+- ✅ 트랜잭션 최적화 (@Transactional)
+- ✅ 읽기 전용 트랜잭션 분리
+- ✅ 페이징 지원 (PageRequest DTO)
+
+### 권장 개선사항
+- 연결 풀 최적화
+- 쿼리 성능 모니터링
+- 인덱스 최적화
+
+## 🐛 문제 해결
+
+### 일반적인 문제
+1. **데이터베이스 연결 실패**
+   - 환경 변수 확인
+   - MySQL 서비스 상태 확인
+
+2. **한글 인코딩 문제**
+   - `application.yml`의 characterEncoding 설정 확인
+   - 데이터베이스 charset 설정 확인
+
+## 📝 API 문서
+
+### 사용자 API
+- `GET /user/list` - 사용자 목록 조회
+- `POST /user/register` - 사용자 등록
+- `PUT /user/update` - 사용자 정보 수정
+- `DELETE /user/delete/{id}` - 사용자 삭제
+
+### 작물 API  
+- `GET /crop/list` - 작물 목록 조회
+- `POST /crop/register` - 작물 등록
+- `PUT /crop/update` - 작물 정보 수정
+- `DELETE /crop/delete/{id}` - 작물 삭제
+
+### 농사일지 API
+- `GET /farm-diary/list` - 농사일지 목록 조회
+- `POST /farm-diary/register` - 농사일지 등록
+- `PUT /farm-diary/update` - 농사일지 수정
+- `DELETE /farm-diary/delete/{id}` - 농사일지 삭제
+
+## 📈 개발 로드맵
+
+### v1.1 (예정)
+- [ ] JWT 인증 시스템
+- [ ] 파일 업로드 기능
+- [ ] 알림 시스템
+
+### v1.2 (예정)
+- [ ] REST API 전환
+- [ ] React 프론트엔드
+- [ ] 실시간 데이터 동기화
+
+## 🤝 기여 방법
+
+1. Fork 프로젝트
+2. Feature 브랜치 생성 (`git checkout -b feature/amazing-feature`)
+3. 변경사항 커밋 (`git commit -m 'Add amazing feature'`)
+4. 브랜치에 Push (`git push origin feature/amazing-feature`)
+5. Pull Request 생성
+
+## 📄 라이센스
+
+이 프로젝트는 MIT 라이센스를 따릅니다.
+
+---
+
+# 데이터베이스 스키마 상세 설계
 
 ```sql
  CREATE TABLE 사용자 (

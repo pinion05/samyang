@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: 'samyang'
+  datasource: 
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/samyang?charsetEncoding=utf-8&serverTimezone=Asia/Seoul
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:password}
+   
+  mvc:
+    view:
+      prefix: /views/
+      suffix: .jsp
+   
+mybatis:
+  mapper-locations: classpath:/mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+    
+logging:
+  level:
+    com.farm404.samyang: DEBUG
+    org.springframework.jdbc: DEBUG
