@@ -53,10 +53,10 @@ public class HelloSpringBoot {
 	@RequestMapping("/confirmSample")
 	public String confirmSample(@ModelAttribute UserDTO userVo) {
 		
-		logger.debug("사용자 입력 정보 - 이름: {}, 이메일: {}", userVo.get이름(), userVo.get이메일());
+		logger.debug("사용자 입력 정보 - 이름: {}, 이메일: {}", userVo.getName(), userVo.getEmail());
 		
 		try {
-			int getLoginCnt = uService.getLogin(userVo.get이메일(), userVo.get비밀번호());
+			int getLoginCnt = uService.getLogin(userVo.getEmail(), userVo.getPassword());
 			logger.info("로그인 시도 결과: {}", getLoginCnt > 0 ? "성공" : "실패");
 			return "redirect:/";
 		} catch (Exception e) {

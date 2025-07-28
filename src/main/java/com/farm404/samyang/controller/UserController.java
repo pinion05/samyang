@@ -71,7 +71,7 @@ public class UserController {
     public String userRegister(UserDTO user, RedirectAttributes redirectAttributes) {
         try {
             // 비밀번호 확인 검증
-            if (!user.get비밀번호().equals(user.get비밀번호확인())) {
+            if (!user.getPassword().equals(user.getPasswordConfirm())) {
                 redirectAttributes.addFlashAttribute("errorMessage", "비밀번호가 일치하지 않습니다.");
                 redirectAttributes.addFlashAttribute("user", user);
                 return "redirect:/user/register";
@@ -109,19 +109,19 @@ public class UserController {
     public String userEdit(UserDTO user, RedirectAttributes redirectAttributes) {
         try {
             // 비밀번호 변경 시 확인 검증
-            if (user.get비밀번호() != null && !user.get비밀번호().isEmpty()) {
-                if (!user.get비밀번호().equals(user.get비밀번호확인())) {
+            if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+                if (!user.getPassword().equals(user.getPasswordConfirm())) {
                     redirectAttributes.addFlashAttribute("errorMessage", "비밀번호가 일치하지 않습니다.");
-                    return "redirect:/user/edit/" + user.get사용자ID();
+                    return "redirect:/user/edit/" + user.getUserId();
                 }
             }
             
             userService.updateUser(user);
             redirectAttributes.addFlashAttribute("successMessage", "사용자 정보가 수정되었습니다.");
-            return "redirect:/user/detail/" + user.get사용자ID();
+            return "redirect:/user/detail/" + user.getUserId();
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
-            return "redirect:/user/edit/" + user.get사용자ID();
+            return "redirect:/user/edit/" + user.getUserId();
         }
     }
     
@@ -156,7 +156,7 @@ public class UserController {
                        RedirectAttributes redirectAttributes) {
         try {
             UserDTO user = userService.login(이메일, 비밀번호);
-            redirectAttributes.addFlashAttribute("successMessage", user.get이름() + "님 환영합니다!");
+            redirectAttributes.addFlashAttribute("successMessage", user.getName() + "님 환영합니다!");
             return "redirect:/";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());

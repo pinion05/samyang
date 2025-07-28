@@ -4,104 +4,104 @@
 <mapper namespace="com.farm404.samyang.mapper.FarmDiaryMapper">
 
     <resultMap id="FarmDiaryResultMap" type="com.farm404.samyang.dto.FarmDiaryDTO">
-        <id property="농사일지ID" column="농사일지ID" />
-        <result property="사용자ID" column="사용자ID" />
-        <result property="작물ID" column="작물ID" />
-        <result property="날짜" column="날짜" />
-        <result property="활동_유형" column="활동_유형" />
-        <result property="내용" column="내용" />
-        <result property="사진_URL" column="사진_URL" />
-        <result property="작성일시" column="작성일시" />
-        <result property="사용자이름" column="사용자이름" />
-        <result property="작물명" column="작물명" />
+        <id property="diaryId" column="diary_id" />
+        <result property="userId" column="user_id" />
+        <result property="cropId" column="crop_id" />
+        <result property="date" column="date" />
+        <result property="activityType" column="activity_type" />
+        <result property="content" column="content" />
+        <result property="photoUrl" column="photo_url" />
+        <result property="createdAt" column="created_at" />
+        <result property="userName" column="user_name" />
+        <result property="cropName" column="crop_name" />
     </resultMap>
 
-    <insert id="insertFarmDiary" parameterType="com.farm404.samyang.dto.FarmDiaryDTO" useGeneratedKeys="true" keyProperty="농사일지ID">
-        INSERT INTO 농사일지 (
-            사용자ID, 작물ID, 날짜, 활동_유형, 내용, 사진_URL
+    <insert id="insertFarmDiary" parameterType="com.farm404.samyang.dto.FarmDiaryDTO" useGeneratedKeys="true" keyProperty="diaryId">
+        INSERT INTO FarmingDiary (
+            user_id, crop_id, date, activity_type, content, photo_url
         ) VALUES (
-            #{사용자ID}, #{작물ID}, #{날짜}, #{활동_유형}, #{내용}, #{사진_URL}
+            #{userId}, #{cropId}, #{date}, #{activityType}, #{content}, #{photoUrl}
         )
     </insert>
 
     <select id="selectFarmDiaryList" parameterType="com.farm404.samyang.dto.FarmDiaryDTO" resultMap="FarmDiaryResultMap">
         SELECT 
-            fd.농사일지ID, fd.사용자ID, fd.작물ID, fd.날짜, fd.활동_유형, fd.내용, fd.사진_URL, fd.작성일시,
-            u.이름 as 사용자이름,
-            c.작물명 as 작물명
-        FROM 농사일지 fd
-        LEFT JOIN 사용자 u ON fd.사용자ID = u.사용자ID
-        LEFT JOIN 작물 c ON fd.작물ID = c.작물ID
-        ORDER BY fd.날짜 DESC, fd.작성일시 DESC
+            fd.diary_id, fd.user_id, fd.crop_id, fd.date, fd.activity_type, fd.content, fd.photo_url, fd.created_at,
+            u.name as user_name,
+            c.crop_name as crop_name
+        FROM FarmingDiary fd
+        LEFT JOIN User u ON fd.user_id = u.user_id
+        LEFT JOIN Crop c ON fd.crop_id = c.crop_id
+        ORDER BY fd.date DESC, fd.created_at DESC
     </select>
 
     <select id="selectFarmDiaryById" parameterType="int" resultMap="FarmDiaryResultMap">
         SELECT 
-            fd.농사일지ID, fd.사용자ID, fd.작물ID, fd.날짜, fd.활동_유형, fd.내용, fd.사진_URL, fd.작성일시,
-            u.이름 as 사용자이름,
-            c.작물명 as 작물명
-        FROM 농사일지 fd
-        LEFT JOIN 사용자 u ON fd.사용자ID = u.사용자ID
-        LEFT JOIN 작물 c ON fd.작물ID = c.작물ID
-        WHERE fd.농사일지ID = #{농사일지ID}
+            fd.diary_id, fd.user_id, fd.crop_id, fd.date, fd.activity_type, fd.content, fd.photo_url, fd.created_at,
+            u.name as user_name,
+            c.crop_name as crop_name
+        FROM FarmingDiary fd
+        LEFT JOIN User u ON fd.user_id = u.user_id
+        LEFT JOIN Crop c ON fd.crop_id = c.crop_id
+        WHERE fd.diary_id = #{diaryId}
     </select>
 
     <select id="selectFarmDiaryListByUserId" parameterType="int" resultMap="FarmDiaryResultMap">
         SELECT 
-            fd.농사일지ID, fd.사용자ID, fd.작물ID, fd.날짜, fd.활동_유형, fd.내용, fd.사진_URL, fd.작성일시,
-            u.이름 as 사용자이름,
-            c.작물명 as 작물명
-        FROM 농사일지 fd
-        LEFT JOIN 사용자 u ON fd.사용자ID = u.사용자ID
-        LEFT JOIN 작물 c ON fd.작물ID = c.작물ID
-        WHERE fd.사용자ID = #{사용자ID}
-        ORDER BY fd.날짜 DESC, fd.작성일시 DESC
+            fd.diary_id, fd.user_id, fd.crop_id, fd.date, fd.activity_type, fd.content, fd.photo_url, fd.created_at,
+            u.name as user_name,
+            c.crop_name as crop_name
+        FROM FarmingDiary fd
+        LEFT JOIN User u ON fd.user_id = u.user_id
+        LEFT JOIN Crop c ON fd.crop_id = c.crop_id
+        WHERE fd.user_id = #{userId}
+        ORDER BY fd.date DESC, fd.created_at DESC
     </select>
 
     <select id="selectFarmDiaryListByCropId" parameterType="int" resultMap="FarmDiaryResultMap">
         SELECT 
-            fd.농사일지ID, fd.사용자ID, fd.작물ID, fd.날짜, fd.활동_유형, fd.내용, fd.사진_URL, fd.작성일시,
-            u.이름 as 사용자이름,
-            c.작물명 as 작물명
-        FROM 농사일지 fd
-        LEFT JOIN 사용자 u ON fd.사용자ID = u.사용자ID
-        LEFT JOIN 작물 c ON fd.작물ID = c.작물ID
-        WHERE fd.작물ID = #{작물ID}
-        ORDER BY fd.날짜 DESC, fd.작성일시 DESC
+            fd.diary_id, fd.user_id, fd.crop_id, fd.date, fd.activity_type, fd.content, fd.photo_url, fd.created_at,
+            u.name as user_name,
+            c.crop_name as crop_name
+        FROM FarmingDiary fd
+        LEFT JOIN User u ON fd.user_id = u.user_id
+        LEFT JOIN Crop c ON fd.crop_id = c.crop_id
+        WHERE fd.crop_id = #{cropId}
+        ORDER BY fd.date DESC, fd.created_at DESC
     </select>
 
     <update id="updateFarmDiary" parameterType="com.farm404.samyang.dto.FarmDiaryDTO">
-        UPDATE 농사일지 SET
-            작물ID = #{작물ID},
-            날짜 = #{날짜},
-            활동_유형 = #{활동_유형},
-            내용 = #{내용},
-            사진_URL = #{사진_URL}
-        WHERE 농사일지ID = #{농사일지ID}
+        UPDATE FarmingDiary SET
+            crop_id = #{cropId},
+            date = #{date},
+            activity_type = #{activityType},
+            content = #{content},
+            photo_url = #{photoUrl}
+        WHERE diary_id = #{diaryId}
     </update>
 
     <delete id="deleteFarmDiary" parameterType="int">
-        DELETE FROM 농사일지
-        WHERE 농사일지ID = #{농사일지ID}
+        DELETE FROM FarmingDiary
+        WHERE diary_id = #{diaryId}
     </delete>
 
     <select id="selectFarmDiaryCount" parameterType="com.farm404.samyang.dto.FarmDiaryDTO" resultType="int">
         SELECT COUNT(*) 
-        FROM 농사일지 fd
-        LEFT JOIN 사용자 u ON fd.사용자ID = u.사용자ID
-        LEFT JOIN 작물 c ON fd.작물ID = c.작물ID
+        FROM FarmingDiary fd
+        LEFT JOIN User u ON fd.user_id = u.user_id
+        LEFT JOIN Crop c ON fd.crop_id = c.crop_id
     </select>
 
     <select id="selectFarmDiaryCountByUserId" parameterType="int" resultType="int">
         SELECT COUNT(*) 
-        FROM 농사일지
-        WHERE 사용자ID = #{사용자ID}
+        FROM FarmingDiary
+        WHERE user_id = #{userId}
     </select>
 
     <select id="selectFarmDiaryCountByCropId" parameterType="int" resultType="int">
         SELECT COUNT(*) 
-        FROM 농사일지
-        WHERE 작물ID = #{작물ID}
+        FROM FarmingDiary
+        WHERE crop_id = #{cropId}
     </select>
 
 </mapper>

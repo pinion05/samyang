@@ -12,7 +12,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: ${DATABASE_URL:jdbc:mysql://34.47.105.223/samyang?charsetEncoding=utf-8&serverTimezone=Asia/Seoul}
     username: ${DATABASE_USERNAME:root}
-    password: ${DATABASE_PASSWORD:6VNS*Z$ARf~j17e=}
+    password: ${DATABASE_PASSWORD:root}
    
   mvc:
     view:

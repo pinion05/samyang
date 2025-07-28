@@ -14,18 +14,18 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CropDTO {
     
-    private Integer 작물ID;
-    private Integer 사용자ID;
-    private String 작물명;
-    private String 품종;
-    private LocalDate 심은날짜;
-    private LocalDate 예상수확일;
-    private String 상태;
+    private Integer cropId;
+    private Integer userId;
+    private String cropName;
+    private String variety;
+    private LocalDate plantingDate;
+    private LocalDate expectedHarvestDate;
+    private String status;
     
     // 조인 관련 필드
-    private String 사용자이름; // 작물 목록에서 사용자 이름 표시용
+    private String userName; // 작물 목록에서 사용자 이름 표시용
     
     // 화면 전용 필드
-    private String 검색키워드;
-    private String 상태필터; // 상태별 필터링용
+    private String searchKeyword;
+    private String statusFilter; // 상태별 필터링용
 }

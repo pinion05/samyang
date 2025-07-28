@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.farm404.samyang.mapper.CommentMapper">
+
+    <resultMap id="CommentResultMap" type="com.farm404.samyang.dto.CommentDTO">
+        <id property="commentId" column="comment_id" />
+        <result property="userId" column="user_id" />
+        <result property="cropId" column="crop_id" />
+        <result property="content" column="content" />
+        <result property="createdAt" column="created_at" />
+        <result property="userName" column="user_name" />
+        <result property="cropName" column="crop_name" />
+    </resultMap>
+
+    <insert id="insertComment" parameterType="com.farm404.samyang.dto.CommentDTO" useGeneratedKeys="true" keyProperty="commentId">
+        INSERT INTO Comment (
+            user_id, crop_id, content
+        ) VALUES (
+            #{userId}, #{cropId}, #{content}
+        )
+    </insert>
+
+    <select id="selectCommentList" parameterType="com.farm404.samyang.dto.CommentDTO" resultMap="CommentResultMap">
+        SELECT 
+            cm.comment_id, cm.user_id, cm.crop_id, cm.content, cm.created_at,
+            u.name as user_name,
+            c.crop_name as crop_name
+        FROM Comment cm
+        LEFT JOIN User u ON cm.user_id = u.user_id
+        LEFT JOIN Crop c ON cm.crop_id = c.crop_id
+        <where>
+            <if test="searchKeyword != null and searchKeyword != ''">
+                AND (cm.content LIKE CONCAT('%', #{searchKeyword}, '%') 
+                 OR u.name LIKE CONCAT('%', #{searchKeyword}, '%')
+                 OR c.crop_name LIKE CONCAT('%', #{searchKeyword}, '%'))
+            </if>
+        </where>
+        ORDER BY cm.created_at DESC
+    </select>
+
+    <select id="selectCommentById" parameterType="int" resultMap="CommentResultMap">
+        SELECT 
+            cm.comment_id, cm.user_id, cm.crop_id, cm.content, cm.created_at,
+            u.name as user_name,
+            c.crop_name as crop_name
+        FROM Comment cm
+        LEFT JOIN User u ON cm.user_id = u.user_id
+        LEFT JOIN Crop c ON cm.crop_id = c.crop_id
+        WHERE cm.comment_id = #{commentId}
+    </select>
+
+    <select id="selectCommentListByUserId" parameterType="int" resultMap="CommentResultMap">
+        SELECT 
+            cm.comment_id, cm.user_id, cm.crop_id, cm.content, cm.created_at,
+            u.name as user_name,
+            c.crop_name as crop_name
+        FROM Comment cm
+        LEFT JOIN User u ON cm.user_id = u.user_id
+        LEFT JOIN Crop c ON cm.crop_id = c.crop_id
+        WHERE cm.user_id = #{userId}
+        ORDER BY cm.created_at DESC
+    </select>
+
+    <select id="selectCommentListByCropId" parameterType="int" resultMap="CommentResultMap">
+        SELECT 
+            cm.comment_id, cm.user_id, cm.crop_id, cm.content, cm.created_at,
+            u.name as user_name,
+            c.crop_name as crop_name
+        FROM Comment cm
+        LEFT JOIN User u ON cm.user_id = u.user_id
+        LEFT JOIN Crop c ON cm.crop_id = c.crop_id
+        WHERE cm.crop_id = #{cropId}
+        ORDER BY cm.created_at DESC
+    </select>
+
+    <update id="updateComment" parameterType="com.farm404.samyang.dto.CommentDTO">
+        UPDATE Comment SET
+            content = #{content}
+        WHERE comment_id = #{commentId}
+    </update>
+
+    <delete id="deleteComment" parameterType="int">
+        DELETE FROM Comment
+        WHERE comment_id = #{commentId}
+    </delete>
+
+    <select id="selectCommentCount" parameterType="com.farm404.samyang.dto.CommentDTO" resultType="int">
+        SELECT COUNT(*) 
+        FROM Comment cm
+        LEFT JOIN User u ON cm.user_id = u.user_id
+        LEFT JOIN Crop c ON cm.crop_id = c.crop_id
+        <where>
+            <if test="searchKeyword != null and searchKeyword != ''">
+                AND (cm.content LIKE CONCAT('%', #{searchKeyword}, '%') 
+                 OR u.name LIKE CONCAT('%', #{searchKeyword}, '%')
+                 OR c.crop_name LIKE CONCAT('%', #{searchKeyword}, '%'))
+            </if>
+        </where>
+    </select>
+
+    <select id="selectCommentCountByUserId" parameterType="int" resultType="int">
+        SELECT COUNT(*) 
+        FROM Comment
+        WHERE user_id = #{userId}
+    </select>
+
+    <select id="selectCommentCountByCropId" parameterType="int" resultType="int">
+        SELECT COUNT(*) 
+        FROM Comment
+        WHERE crop_id = #{cropId}
+    </select>
+
+</mapper>

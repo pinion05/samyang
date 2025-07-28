@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.farm404.samyang.mapper.ReviewMapper">
+
+    <resultMap id="ReviewResultMap" type="com.farm404.samyang.dto.ReviewDTO">
+        <id property="reviewId" column="review_id" />
+        <result property="userId" column="user_id" />
+        <result property="cropId" column="crop_id" />
+        <result property="rating" column="rating" />
+        <result property="content" column="content" />
+        <result property="createdAt" column="created_at" />
+        <result property="userName" column="user_name" />
+        <result property="cropName" column="crop_name" />
+    </resultMap>
+
+    <insert id="insertReview" parameterType="com.farm404.samyang.dto.ReviewDTO" useGeneratedKeys="true" keyProperty="reviewId">
+        INSERT INTO Review (
+            user_id, crop_id, rating, content
+        ) VALUES (
+            #{userId}, #{cropId}, #{rating}, #{content}
+        )
+    </insert>
+
+    <select id="selectReviewList" parameterType="com.farm404.samyang.dto.ReviewDTO" resultMap="ReviewResultMap">
+        SELECT 
+            r.review_id, r.user_id, r.crop_id, r.rating, r.content, r.created_at,
+            u.name as user_name,
+            c.crop_name as crop_name
+        FROM Review r
+        LEFT JOIN User u ON r.user_id = u.user_id
+        LEFT JOIN Crop c ON r.crop_id = c.crop_id
+        <where>
+            <if test="searchKeyword != null and searchKeyword != ''">
+                AND (r.content LIKE CONCAT('%', #{searchKeyword}, '%') 
+                 OR u.name LIKE CONCAT('%', #{searchKeyword}, '%')
+                 OR c.crop_name LIKE CONCAT('%', #{searchKeyword}, '%'))
+            </if>
+            <if test="ratingFilter != null">
+                AND r.rating = #{ratingFilter}
+            </if>
+        </where>
+        ORDER BY r.created_at DESC
+    </select>
+
+    <select id="selectReviewById" parameterType="int" resultMap="ReviewResultMap">
+        SELECT 
+            r.review_id, r.user_id, r.crop_id, r.rating, r.content, r.created_at,
+            u.name as user_name,
+            c.crop_name as crop_name
+        FROM Review r
+        LEFT JOIN User u ON r.user_id = u.user_id
+        LEFT JOIN Crop c ON r.crop_id = c.crop_id
+        WHERE r.review_id = #{reviewId}
+    </select>
+
+    <select id="selectReviewListByUserId" parameterType="int" resultMap="ReviewResultMap">
+        SELECT 
+            r.review_id, r.user_id, r.crop_id, r.rating, r.content, r.created_at,
+            u.name as user_name,
+            c.crop_name as crop_name
+        FROM Review r
+        LEFT JOIN User u ON r.user_id = u.user_id
+        LEFT JOIN Crop c ON r.crop_id = c.crop_id
+        WHERE r.user_id = #{userId}
+        ORDER BY r.created_at DESC
+    </select>
+
+    <select id="selectReviewListByCropId" parameterType="int" resultMap="ReviewResultMap">
+        SELECT 
+            r.review_id, r.user_id, r.crop_id, r.rating, r.content, r.created_at,
+            u.name as user_name,
+            c.crop_name as crop_name
+        FROM Review r
+        LEFT JOIN User u ON r.user_id = u.user_id
+        LEFT JOIN Crop c ON r.crop_id = c.crop_id
+        WHERE r.crop_id = #{cropId}
+        ORDER BY r.created_at DESC
+    </select>
+
+    <update id="updateReview" parameterType="com.farm404.samyang.dto.ReviewDTO">
+        UPDATE Review SET
+            rating = #{rating},
+            content = #{content}
+        WHERE review_id = #{reviewId}
+    </update>
+
+    <delete id="deleteReview" parameterType="int">
+        DELETE FROM Review
+        WHERE review_id = #{reviewId}
+    </delete>
+
+    <select id="selectReviewCount" parameterType="com.farm404.samyang.dto.ReviewDTO" resultType="int">
+        SELECT COUNT(*) 
+        FROM Review r
+        LEFT JOIN User u ON r.user_id = u.user_id
+        LEFT JOIN Crop c ON r.crop_id = c.crop_id
+        <where>
+            <if test="searchKeyword != null and searchKeyword != ''">
+                AND (r.content LIKE CONCAT('%', #{searchKeyword}, '%') 
+                 OR u.name LIKE CONCAT('%', #{searchKeyword}, '%')
+                 OR c.crop_name LIKE CONCAT('%', #{searchKeyword}, '%'))
+            </if>
+            <if test="ratingFilter != null">
+                AND r.rating = #{ratingFilter}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectReviewCountByUserId" parameterType="int" resultType="int">
+        SELECT COUNT(*) 
+        FROM Review
+        WHERE user_id = #{userId}
+    </select>
+
+    <select id="selectReviewCountByCropId" parameterType="int" resultType="int">
+        SELECT COUNT(*) 
+        FROM Review
+        WHERE crop_id = #{cropId}
+    </select>
+
+    <select id="selectAverageRatingByCropId" parameterType="int" resultType="double">
+        SELECT COALESCE(AVG(rating), 0.0)
+        FROM Review
+        WHERE crop_id = #{cropId}
+    </select>
+
+</mapper>

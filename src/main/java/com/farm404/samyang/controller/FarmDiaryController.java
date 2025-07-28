@@ -53,12 +53,12 @@ public class FarmDiaryController {
     /**
      * 사용자별 농사일지 목록 페이지
      */
-    @GetMapping("/user/{사용자ID}")
-    public String diaryListByUser(@PathVariable Integer 사용자ID, Model model) {
+    @GetMapping("/user/{userId}")
+    public String diaryListByUser(@PathVariable Integer userId, Model model) {
         try {
-            List<FarmDiaryDTO> diaryList = farmDiaryService.getFarmDiaryListByUserId(사용자ID);
-            UserDTO user = userService.getUserById(사용자ID);
-            int totalCount = farmDiaryService.getFarmDiaryCountByUserId(사용자ID);
+            List<FarmDiaryDTO> diaryList = farmDiaryService.getFarmDiaryListByUserId(userId);
+            UserDTO user = userService.getUserById(userId);
+            int totalCount = farmDiaryService.getFarmDiaryCountByUserId(userId);
             
             model.addAttribute("diaryList", diaryList);
             model.addAttribute("user", user);
@@ -74,12 +74,12 @@ public class FarmDiaryController {
     /**
      * 작물별 농사일지 목록 페이지
      */
-    @GetMapping("/crop/{작물ID}")
-    public String diaryListByCrop(@PathVariable Integer 작물ID, Model model) {
+    @GetMapping("/crop/{cropId}")
+    public String diaryListByCrop(@PathVariable Integer cropId, Model model) {
         try {
-            List<FarmDiaryDTO> diaryList = farmDiaryService.getFarmDiaryListByCropId(작물ID);
-            CropDTO crop = cropService.getCropById(작물ID);
-            int totalCount = farmDiaryService.getFarmDiaryCountByCropId(작물ID);
+            List<FarmDiaryDTO> diaryList = farmDiaryService.getFarmDiaryListByCropId(cropId);
+            CropDTO crop = cropService.getCropById(cropId);
+            int totalCount = farmDiaryService.getFarmDiaryCountByCropId(cropId);
             
             model.addAttribute("diaryList", diaryList);
             model.addAttribute("crop", crop);
@@ -95,10 +95,10 @@ public class FarmDiaryController {
     /**
      * 농사일지 상세 페이지
      */
-    @GetMapping("/detail/{농사일지ID}")
-    public String diaryDetail(@PathVariable Integer 농사일지ID, Model model) {
+    @GetMapping("/detail/{diaryId}")
+    public String diaryDetail(@PathVariable Integer diaryId, Model model) {
         try {
-            FarmDiaryDTO diary = farmDiaryService.getFarmDiaryById(농사일지ID);
+            FarmDiaryDTO diary = farmDiaryService.getFarmDiaryById(diaryId);
             model.addAttribute("diary", diary);
             return "diary/detail";
         } catch (Exception e) {
@@ -111,8 +111,8 @@ public class FarmDiaryController {
      * 농사일지 등록 폼 페이지
      */
     @GetMapping("/register")
-    public String diaryRegisterForm(@RequestParam(required = false) Integer 사용자ID,
-                                   @RequestParam(required = false) Integer 작물ID,
+    public String diaryRegisterForm(@RequestParam(required = false) Integer userId,
+                                   @RequestParam(required = false) Integer cropId,
                                    Model model) {
         try {
             // 사용자 목록 조회
@@ -120,15 +120,15 @@ public class FarmDiaryController {
             
             // 작물 목록 조회 (사용자ID가 있으면 해당 사용자의 작물만)
             List<CropDTO> cropList;
-            if (사용자ID != null) {
-                cropList = cropService.getCropListByUserId(사용자ID);
+            if (userId != null) {
+                cropList = cropService.getCropListByUserId(userId);
             } else {
                 cropList = cropService.getCropList(new CropDTO());
             }
             
             FarmDiaryDTO diary = new FarmDiaryDTO();
-            if (사용자ID != null) diary.set사용자ID(사용자ID);
-            if (작물ID != null) diary.set작물ID(작물ID);
+            if (userId != null) diary.setUserId(userId);
+            if (cropId != null) diary.setCropId(cropId);
             
             model.addAttribute("diary", diary);
             model.addAttribute("userList", userList);
@@ -160,12 +160,12 @@ public class FarmDiaryController {
     /**
      * 농사일지 수정 폼 페이지
      */
-    @GetMapping("/edit/{농사일지ID}")
-    public String diaryEditForm(@PathVariable Integer 농사일지ID, Model model) {
+    @GetMapping("/edit/{diaryId}")
+    public String diaryEditForm(@PathVariable Integer diaryId, Model model) {
         try {
-            FarmDiaryDTO diary = farmDiaryService.getFarmDiaryById(농사일지ID);
+            FarmDiaryDTO diary = farmDiaryService.getFarmDiaryById(diaryId);
             List<UserDTO> userList = userService.getUserList(new UserDTO());
-            List<CropDTO> cropList = cropService.getCropListByUserId(diary.get사용자ID());
+            List<CropDTO> cropList = cropService.getCropListByUserId(diary.getUserId());
             
             model.addAttribute("diary", diary);
             model.addAttribute("userList", userList);
@@ -186,20 +186,20 @@ public class FarmDiaryController {
         try {
             farmDiaryService.updateFarmDiary(diary);
             redirectAttributes.addFlashAttribute("successMessage", "농사일지가 수정되었습니다.");
-            return "redirect:/diary/detail/" + diary.get농사일지ID();
+            return "redirect:/diary/detail/" + diary.getDiaryId();
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
-            return "redirect:/diary/edit/" + diary.get농사일지ID();
+            return "redirect:/diary/edit/" + diary.getDiaryId();
         }
     }
     
     /**
      * 농사일지 삭제 처리
      */
-    @PostMapping("/delete/{농사일지ID}")
-    public String diaryDelete(@PathVariable Integer 농사일지ID, RedirectAttributes redirectAttributes) {
+    @PostMapping("/delete/{diaryId}")
+    public String diaryDelete(@PathVariable Integer diaryId, RedirectAttributes redirectAttributes) {
         try {
-            farmDiaryService.deleteFarmDiary(농사일지ID);
+            farmDiaryService.deleteFarmDiary(diaryId);
             redirectAttributes.addFlashAttribute("successMessage", "농사일지가 삭제되었습니다.");
             return "redirect:/diary/list";
         } catch (Exception e) {
@@ -211,11 +211,11 @@ public class FarmDiaryController {
     /**
      * 사용자별 작물 목록 API (AJAX용)
      */
-    @GetMapping("/api/crops/{사용자ID}")
+    @GetMapping("/api/crops/{userId}")
     @ResponseBody
-    public List<CropDTO> getCropsByUserId(@PathVariable Integer 사용자ID) {
+    public List<CropDTO> getCropsByUserId(@PathVariable Integer userId) {
         try {
-            return cropService.getCropListByUserId(사용자ID);
+            return cropService.getCropListByUserId(userId);
         } catch (Exception e) {
             return null;
         }

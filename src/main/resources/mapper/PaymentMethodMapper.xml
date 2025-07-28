@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.farm404.samyang.mapper.PaymentMethodMapper">
+
+    <resultMap id="PaymentMethodResultMap" type="com.farm404.samyang.dto.PaymentMethodDTO">
+        <id property="paymentMethodId" column="payment_method_id" />
+        <result property="userId" column="user_id" />
+        <result property="methodType" column="method_type" />
+        <result property="provider" column="provider" />
+        <result property="accountInfo" column="account_info" />
+        <result property="isDefault" column="is_default" />
+        <result property="createdAt" column="created_at" />
+        <result property="userName" column="user_name" />
+    </resultMap>
+
+    <insert id="insertPaymentMethod" parameterType="com.farm404.samyang.dto.PaymentMethodDTO" useGeneratedKeys="true" keyProperty="paymentMethodId">
+        INSERT INTO PaymentMethod (
+            user_id, method_type, provider, account_info, is_default
+        ) VALUES (
+            #{userId}, #{methodType}, #{provider}, #{accountInfo}, #{isDefault}
+        )
+    </insert>
+
+    <select id="selectPaymentMethodList" parameterType="com.farm404.samyang.dto.PaymentMethodDTO" resultMap="PaymentMethodResultMap">
+        SELECT 
+            pm.payment_method_id, pm.user_id, pm.method_type, pm.provider, pm.account_info, pm.is_default, pm.created_at,
+            u.name as user_name
+        FROM PaymentMethod pm
+        LEFT JOIN User u ON pm.user_id = u.user_id
+        ORDER BY pm.is_default DESC, pm.created_at DESC
+    </select>
+
+    <select id="selectPaymentMethodById" parameterType="int" resultMap="PaymentMethodResultMap">
+        SELECT 
+            pm.payment_method_id, pm.user_id, pm.method_type, pm.provider, pm.account_info, pm.is_default, pm.created_at,
+            u.name as user_name
+        FROM PaymentMethod pm
+        LEFT JOIN User u ON pm.user_id = u.user_id
+        WHERE pm.payment_method_id = #{paymentMethodId}
+    </select>
+
+    <select id="selectPaymentMethodListByUserId" parameterType="int" resultMap="PaymentMethodResultMap">
+        SELECT 
+            pm.payment_method_id, pm.user_id, pm.method_type, pm.provider, pm.account_info, pm.is_default, pm.created_at,
+            u.name as user_name
+        FROM PaymentMethod pm
+        LEFT JOIN User u ON pm.user_id = u.user_id
+        WHERE pm.user_id = #{userId}
+        ORDER BY pm.is_default DESC, pm.created_at DESC
+    </select>
+
+    <update id="updatePaymentMethod" parameterType="com.farm404.samyang.dto.PaymentMethodDTO">
+        UPDATE PaymentMethod SET
+            method_type = #{methodType},
+            provider = #{provider},
+            account_info = #{accountInfo},
+            is_default = #{isDefault}
+        WHERE payment_method_id = #{paymentMethodId}
+    </update>
+
+    <delete id="deletePaymentMethod" parameterType="int">
+        DELETE FROM PaymentMethod
+        WHERE payment_method_id = #{paymentMethodId}
+    </delete>
+
+    <select id="selectPaymentMethodCount" parameterType="com.farm404.samyang.dto.PaymentMethodDTO" resultType="int">
+        SELECT COUNT(*) 
+        FROM PaymentMethod pm
+        LEFT JOIN User u ON pm.user_id = u.user_id
+    </select>
+
+    <select id="selectPaymentMethodCountByUserId" parameterType="int" resultType="int">
+        SELECT COUNT(*) 
+        FROM PaymentMethod
+        WHERE user_id = #{userId}
+    </select>
+
+</mapper>

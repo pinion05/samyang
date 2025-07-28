@@ -48,12 +48,12 @@ public class CropController {
     /**
      * 사용자별 작물 목록 페이지
      */
-    @GetMapping("/user/{사용자ID}")
-    public String cropListByUser(@PathVariable Integer 사용자ID, Model model) {
+    @GetMapping("/user/{userId}")
+    public String cropListByUser(@PathVariable Integer userId, Model model) {
         try {
-            List<CropDTO> cropList = cropService.getCropListByUserId(사용자ID);
-            UserDTO user = userService.getUserById(사용자ID);
-            int totalCount = cropService.getCropCountByUserId(사용자ID);
+            List<CropDTO> cropList = cropService.getCropListByUserId(userId);
+            UserDTO user = userService.getUserById(userId);
+            int totalCount = cropService.getCropCountByUserId(userId);
             
             model.addAttribute("cropList", cropList);
             model.addAttribute("user", user);
@@ -69,10 +69,10 @@ public class CropController {
     /**
      * 작물 상세 페이지
      */
-    @GetMapping("/detail/{작물ID}")
-    public String cropDetail(@PathVariable Integer 작물ID, Model model) {
+    @GetMapping("/detail/{cropId}")
+    public String cropDetail(@PathVariable Integer cropId, Model model) {
         try {
-            CropDTO crop = cropService.getCropById(작물ID);
+            CropDTO crop = cropService.getCropById(cropId);
             model.addAttribute("crop", crop);
             return "crop/detail";
         } catch (Exception e) {
@@ -119,10 +119,10 @@ public class CropController {
     /**
      * 작물 수정 폼 페이지
      */
-    @GetMapping("/edit/{작물ID}")
-    public String cropEditForm(@PathVariable Integer 작물ID, Model model) {
+    @GetMapping("/edit/{cropId}")
+    public String cropEditForm(@PathVariable Integer cropId, Model model) {
         try {
-            CropDTO crop = cropService.getCropById(작물ID);
+            CropDTO crop = cropService.getCropById(cropId);
             List<UserDTO> userList = userService.getUserList(new UserDTO());
             
             model.addAttribute("crop", crop);
@@ -143,20 +143,20 @@ public class CropController {
         try {
             cropService.updateCrop(crop);
             redirectAttributes.addFlashAttribute("successMessage", "작물 정보가 수정되었습니다.");
-            return "redirect:/crop/detail/" + crop.get작물ID();
+            return "redirect:/crop/detail/" + crop.getCropId();
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
-            return "redirect:/crop/edit/" + crop.get작물ID();
+            return "redirect:/crop/edit/" + crop.getCropId();
         }
     }
     
     /**
      * 작물 삭제 처리
      */
-    @PostMapping("/delete/{작물ID}")
-    public String cropDelete(@PathVariable Integer 작물ID, RedirectAttributes redirectAttributes) {
+    @PostMapping("/delete/{cropId}")
+    public String cropDelete(@PathVariable Integer cropId, RedirectAttributes redirectAttributes) {
         try {
-            cropService.deleteCrop(작물ID);
+            cropService.deleteCrop(cropId);
             redirectAttributes.addFlashAttribute("successMessage", "작물이 삭제되었습니다.");
             return "redirect:/crop/list";
         } catch (Exception e) {
@@ -170,9 +170,9 @@ public class CropController {
      */
     @PostMapping("/update-status")
     @ResponseBody
-    public String updateCropStatus(@RequestParam Integer 작물ID, @RequestParam String 상태) {
+    public String updateCropStatus(@RequestParam Integer cropId, @RequestParam String status) {
         try {
-            cropService.updateCropStatus(작물ID, 상태);
+            cropService.updateCropStatus(cropId, status);
             return "success";
         } catch (Exception e) {
             return "error: " + e.getMessage();

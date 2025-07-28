@@ -1,6 +1,8 @@
 package com.farm404.samyang.controller;
 
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory; // Added import for LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +20,8 @@ import com.farm404.samyang.service.FarmDiaryService;
  */
 @Controller
 public class HomeController {
+    
+    private static final Logger logger = LoggerFactory.getLogger(HomeController.class); // Added logger instance
     
     @Autowired
     private UserService userService;
@@ -68,7 +72,8 @@ public class HomeController {
             return "home";
         } catch (Exception e) {
             model.addAttribute("errorMessage", "메인 페이지를 불러오는 중 오류가 발생했습니다.");
-            System.out.println(e);
+            // Replaced System.out.println with proper logger
+            logger.error("Error occurred in HomeController.home method", e);
             return "error";
         }
     }

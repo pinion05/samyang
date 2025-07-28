@@ -15,22 +15,22 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class FarmDiaryDTO {
     
-    private Integer 농사일지ID;
-    private Integer 사용자ID;
-    private Integer 작물ID; // ERD에 있는 관계 (README 232라인 참조)
-    private LocalDate 날짜;
-    private String 활동_유형;
-    private String 내용;
-    private String 사진_URL;
-    private LocalDateTime 작성일시;
+    private Integer diaryId;
+    private Integer userId;
+    private Integer cropId; // ERD에 있는 관계 (README 232라인 참조)
+    private LocalDate date;
+    private String activityType;
+    private String content;
+    private String photoUrl;
+    private LocalDateTime createdAt;
     
     // 조인 관련 필드
-    private String 사용자이름;
-    private String 작물명;
+    private String userName;
+    private String cropName;
     
     // 화면 전용 필드
-    private String 검색키워드;
-    private String 활동필터; // 활동 유형별 필터링용
-    private LocalDate 시작날짜; // 기간 검색용
-    private LocalDate 종료날짜; // 기간 검색용
+    private String searchKeyword;
+    private String activityFilter; // 활동 유형별 필터링용
+    private LocalDate startDate; // 기간 검색용
+    private LocalDate endDate; // 기간 검색용
 }
