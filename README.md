@@ -178,84 +178,85 @@ java -jar build/libs/samyang-*.jar
 # 데이터베이스 스키마 상세 설계
 
 ```sql
- CREATE TABLE 사용자 (
-      사용자ID INT AUTO_INCREMENT PRIMARY KEY,
-      이름 VARCHAR(255) NOT NULL,
-      이메일 VARCHAR(255) NOT NULL UNIQUE,
-      비밀번호 VARCHAR(255) NOT NULL,
-      전화번호 VARCHAR(20),
-      주소 VARCHAR(255),
-      관리자여부 BOOLEAN DEFAULT FALSE,
-      가입일시 DATETIME DEFAULT CURRENT_TIMESTAMP
-  );
+-- User Table
+CREATE TABLE User (
+    UserID INT AUTO_INCREMENT PRIMARY KEY,
+    Name VARCHAR(255) NOT NULL,
+    Email VARCHAR(255) NOT NULL UNIQUE,
+    Password VARCHAR(255) NOT NULL,
+    PhoneNumber VARCHAR(20),
+    Address VARCHAR(255),
+    IsAdmin BOOLEAN DEFAULT FALSE,
+    CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP
+);
 
-  -- 결제수단 테이블
-  CREATE TABLE 결제수단 (
-      결제수단ID INT AUTO_INCREMENT PRIMARY KEY,
-      사용자ID INT NOT NULL,
-      카드번호 VARCHAR(255) NOT NULL,
-      만료일 DATE NOT NULL,
-      CVC VARCHAR(4) NOT NULL,
-      FOREIGN KEY (사용자ID) REFERENCES 사용자(사용자ID)
-  );
+-- PaymentMethod Table
+CREATE TABLE PaymentMethod (
+    PaymentMethodID INT AUTO_INCREMENT PRIMARY KEY,
+    UserID INT NOT NULL,
+    CardNumber VARCHAR(255) NOT NULL,
+    ExpiryDate DATE NOT NULL,
+    CVC VARCHAR(4) NOT NULL,
+    FOREIGN KEY (UserID) REFERENCES User(UserID)
+);
 
-  -- 작물 테이블
-  CREATE TABLE 작물 (
-      작물ID INT AUTO_INCREMENT PRIMARY KEY,
-      사용자ID INT NOT NULL,
-      작물명 VARCHAR(255) NOT NULL,
-      품종 VARCHAR(255),
-      심은날짜 DATE,
-      예상수확일 DATE,
-      상태 VARCHAR(50),
-      FOREIGN KEY (사용자ID) REFERENCES 사용자(사용자ID)
-  );
+-- Crop Table
+CREATE TABLE Crop (
+    CropID INT AUTO_INCREMENT PRIMARY KEY,
+    UserID INT NOT NULL,
+    CropName VARCHAR(255) NOT NULL,
+    Variety VARCHAR(255),
+    PlantedDate DATE,
+    ExpectedHarvestDate DATE,
+    Status VARCHAR(50),
+    FOREIGN KEY (UserID) REFERENCES User(UserID)
+);
 
-  -- 농사일지 테이블
-  CREATE TABLE 농사일지 (
-      농사일지ID INT AUTO_INCREMENT PRIMARY KEY,
-      사용자ID INT NOT NULL,
-      날짜 DATE NOT NULL,
-      활동_유형 VARCHAR(100),
-      내용 TEXT NOT NULL,
-      사진_URL VARCHAR(255),
-      작성일시 DATETIME DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (사용자ID) REFERENCES 사용자(사용자ID)
-  );
+-- FarmingDiary Table
+CREATE TABLE FarmingDiary (
+    FarmingDiaryID INT AUTO_INCREMENT PRIMARY KEY,
+    UserID INT NOT NULL,
+    Date DATE NOT NULL,
+    ActivityType VARCHAR(100),
+    Content TEXT NOT NULL,
+    PhotoURL VARCHAR(255),
+    CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (UserID) REFERENCES User(UserID)
+);
 
-  -- 댓글 테이블 (게시물 테이블이 없어서 게시물ID를 INT로만 설정)
-  CREATE TABLE 댓글 (
-      댓글ID INT AUTO_INCREMENT PRIMARY KEY,
-      게시물ID INT NOT NULL,
-      사용자ID INT NOT NULL,
-      내용 TEXT NOT NULL,
-      작성일시 DATETIME DEFAULT CURRENT_TIMESTAMP,
-      수정일자 DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-      FOREIGN KEY (사용자ID) REFERENCES 사용자(사용자ID)
-  );
+-- Comment Table
+CREATE TABLE Comment (
+    CommentID INT AUTO_INCREMENT PRIMARY KEY,
+    PostID INT NOT NULL,
+    UserID INT NOT NULL,
+    Content TEXT NOT NULL,
+    CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    UpdatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (UserID) REFERENCES User(UserID)
+);
 
-  -- 리뷰 테이블 (주문상품 테이블이 없어서 주문상품ID를 INT로만 설정)
-  CREATE TABLE 리뷰 (
-      리뷰ID INT AUTO_INCREMENT PRIMARY KEY,
-      주문상품ID INT NOT NULL,
-      사용자ID INT NOT NULL,
-      평점 INT NOT NULL CHECK (평점 >= 1 AND 평점 <= 5),
-      내용 TEXT,
-      작성일시 DATETIME DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (사용자ID) REFERENCES 사용자(사용자ID)
-  );
+-- Review Table
+CREATE TABLE Review (
+    ReviewID INT AUTO_INCREMENT PRIMARY KEY,
+    OrderItemID INT NOT NULL,
+    UserID INT NOT NULL,
+    Rating INT NOT NULL CHECK (Rating >= 1 AND Rating <= 5),
+    Content TEXT,
+    CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (UserID) REFERENCES User(UserID)
+);
 
-  -- 신고 테이블
-  CREATE TABLE 신고 (
-      신고ID INT AUTO_INCREMENT PRIMARY KEY,
-      신고자_사용자ID INT NOT NULL,
-      신고_유형 VARCHAR(50) NOT NULL,
-      신고_대상_ID INT NOT NULL,
-      사유 TEXT NOT NULL,
-      신고일시 DATETIME DEFAULT CURRENT_TIMESTAMP,
-      처리상태 VARCHAR(50) DEFAULT '접수',
-      FOREIGN KEY (신고자_사용자ID) REFERENCES 사용자(사용자ID)
-  );
+-- Report Table
+CREATE TABLE Report (
+    ReportID INT AUTO_INCREMENT PRIMARY KEY,
+    ReporterUserID INT NOT NULL,
+    ReportType VARCHAR(50) NOT NULL,
+    TargetID INT NOT NULL,
+    Reason TEXT NOT NULL,
+    ReportedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    Status VARCHAR(50) DEFAULT 'Received',
+    FOREIGN KEY (ReporterUserID) REFERENCES User(UserID)
+);
 ```
 
 
