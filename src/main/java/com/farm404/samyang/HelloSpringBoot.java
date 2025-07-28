@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.farm404.samyang.UserDTO.UserDTO;
-import com.farm404.samyang.UserService.UserService;
+import com.farm404.samyang.dto.UserDTO;
+import com.farm404.samyang.service.UserService;
 
 
 
@@ -44,17 +44,17 @@ public class HelloSpringBoot {
 	@RequestMapping("/sample")
 	public String samplePage() {
 		
-		return "login";
+		return "user/login";
 	}
 	
-	@RequestMapping("/confrimSample")
-	public String conSample(@ModelAttribute UserDTO userVo) {
+	@RequestMapping("/confirmSample")
+	public String confirmSample(@ModelAttribute UserDTO userVo) {
 		
-		System.out.println("userVo.getName() : " + userVo.getName());
-		System.out.println("userVo.getPwd() : " + userVo.getPwd());
+		System.out.println("userVo.get이름() : " + userVo.get이름());
+		System.out.println("userVo.get비밀번호() : " + userVo.get비밀번호());
 		System.out.println("userVo() : " + userVo);
 		
-		int getLoginCnt = uService.getLogin(userVo);
+		int getLoginCnt = uService.getLogin(userVo.get이메일(), userVo.get비밀번호());
 		
 		System.out.println("=========================");
 		System.out.println("loginCon" + getLoginCnt);
