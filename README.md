@@ -12,27 +12,17 @@ Table 사용자 {
   비밀번호 varchar(255) [not null]
   전화번호 varchar(20)
   주소 varchar(255)
-  역할 varchar(50) [default: 'user'] // 예: 'user', 'admin'
+  관리자여부 boolean [default: false] // 관리자 여부
   가입일시 datetime [default: 'now()']
 }
 
-Table 관리자 {
-  관리자ID int [pk, increment]
-  이름 varchar(255) [not null]
-  이메일 varchar(255) [not null, unique]
-  비밀번호 varchar(255) [not null]
-  전화번호 varchar(20)
-  권한_레벨 int [not null] // 예: 1(일반), 2(고급), 3(최고)
-  가입일시 datetime [default: 'now()']
-}
 
 Table 결제수단 {
   결제수단ID int [pk, increment]
   사용자ID int [not null]
   카드번호 varchar(255) [not null] // 암호화 저장
   만료일 date [not null]
-  CVV varchar(4) [not null] // 암호화 저장
-  카드소유자명 varchar(255) [not null]
+  CVC varchar(4) [not null] // 암호화 저장
 }
 ```
 
@@ -52,7 +42,6 @@ Table 작물 {
 Table 농사일지 {
   농사일지ID int [pk, increment]
   사용자ID int [not null]
-  작물ID int [not null]
   날짜 date [not null]
   활동_유형 varchar(100) // 예: '물주기', '비료주기', '수확'
   내용 text
@@ -77,18 +66,11 @@ Table 상품 {
 Table 주문 {
   주문ID int [pk, increment]
   사용자ID int [not null]
+  상품ID int 
+  주문갯수 int
   주문일시 datetime [default: 'now()']
-  총_결제금액 decimal(10, 2) [not null]
   상태 varchar(50) // 예: '주문 완료', '배송 중', '배송 완료', '취소'
 }
-
-Table 주문상품 {
-  주문상품ID int [pk, increment]
-  주문ID int [not null]
-  상품ID int [not null]
-  수량 int [not null]
-}
-```
 
 ### 커뮤니티 관리
 
@@ -96,7 +78,7 @@ Table 주문상품 {
 Table 공지사항 {
   공지사항ID int [pk, increment]
   공지사항_이름 varchar(100) [not null, unique] // 예: '공지사항', '자유게시판'
-  설명 text
+  설명 varchar()
   사진_URL varchar(255)
 }
 
@@ -104,7 +86,7 @@ Table 게시물 {
   게시물ID int [pk, increment]
   사용자ID int [not null]
   제목 varchar(255) [not null]
-  내용 text [not null]
+  내용 TEXT [not null]
   사진_URL varchar(255)
   작성일시 datetime [default: 'now()']
 }
@@ -115,6 +97,7 @@ Table 댓글 {
   사용자ID int [not null]
   내용 text [not null]
   작성일시 datetime [default: 'now()']
+  수정일자 datetime [default: 'now()']
 }
 
 Table 리뷰 {
@@ -181,7 +164,7 @@ Ref: 리뷰.주문상품ID > 주문상품.주문상품ID
 ## 주요 특징
 
 ### 보안
-- 카드번호, CVV는 암호화하여 저장
+- 카드번호, CVC는 암호화하여 저장
 - 비밀번호는 해시화하여 저장
 - 개인정보 보호를 위한 데이터 마스킹 적용
 
