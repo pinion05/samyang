@@ -3,7 +3,8 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>농산물 목록</title>
+    <title>농산물</title>
+<script src="http://localhost:35729/livereload.js"></script>
 </head>
 <body>
     <h1>농산물 목록</h1>
