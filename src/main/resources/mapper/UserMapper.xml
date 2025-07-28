@@ -2,17 +2,101 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.farm404.samyang.UserRepository.UserMapper">
+<mapper namespace="com.farm404.samyang.mapper.UserMapper">
 
-	<select id="getLogin" parameterType="com.farm404.samyang.UserDTO.UserDTO" resultType="_int">
-	
-			select 
-				count(*) as userCnt 
-			from users
-			where 
-				username = #{name}
-				and password = #{pwd}
-		
+	<!-- 결과 매핑 정의 -->
+	<resultMap id="UserResultMap" type="com.farm404.samyang.dto.UserDTO">
+		<id property="사용자ID" column="사용자ID" />
+		<result property="이름" column="이름" />
+		<result property="이메일" column="이메일" />
+		<result property="비밀번호" column="비밀번호" />
+		<result property="전화번호" column="전화번호" />
+		<result property="주소" column="주소" />
+		<result property="관리자여부" column="관리자여부" />
+		<result property="가입일시" column="가입일시" />
+	</resultMap>
+
+	<!-- 사용자 등록 -->
+	<insert id="insertUser" parameterType="com.farm404.samyang.dto.UserDTO" useGeneratedKeys="true" keyProperty="사용자ID">
+		INSERT INTO 사용자 (
+			이름, 이메일, 비밀번호, 전화번호, 주소, 관리자여부
+		) VALUES (
+			#{이름}, #{이메일}, #{비밀번호}, #{전화번호}, #{주소}, #{관리자여부}
+		)
+	</insert>
+
+	<!-- 사용자 목록 조회 -->
+	<select id="selectUserList" parameterType="com.farm404.samyang.dto.UserDTO" resultMap="UserResultMap">
+		SELECT 
+			사용자ID, 이름, 이메일, 전화번호, 주소, 관리자여부, 가입일시
+		FROM 사용자
+		<where>
+			<if test="검색키워드 != null and 검색키워드 != ''">
+				AND (이름 LIKE CONCAT('%', #{검색키워드}, '%') 
+				 OR 이메일 LIKE CONCAT('%', #{검색키워드}, '%'))
+			</if>
+		</where>
+		ORDER BY 가입일시 DESC
 	</select>
-	
+
+	<!-- 사용자 상세 조회 -->
+	<select id="selectUserById" parameterType="int" resultMap="UserResultMap">
+		SELECT 
+			사용자ID, 이름, 이메일, 전화번호, 주소, 관리자여부, 가입일시
+		FROM 사용자
+		WHERE 사용자ID = #{사용자ID}
+	</select>
+
+	<!-- 이메일로 사용자 조회 (로그인용) -->
+	<select id="selectUserByEmail" parameterType="string" resultMap="UserResultMap">
+		SELECT 
+			사용자ID, 이름, 이메일, 비밀번호, 전화번호, 주소, 관리자여부, 가입일시
+		FROM 사용자
+		WHERE 이메일 = #{이메일}
+	</select>
+
+	<!-- 사용자 정보 수정 -->
+	<update id="updateUser" parameterType="com.farm404.samyang.dto.UserDTO">
+		UPDATE 사용자 SET
+			이름 = #{이름},
+			전화번호 = #{전화번호},
+			주소 = #{주소}
+			<if test="비밀번호 != null and 비밀번호 != ''">
+				, 비밀번호 = #{비밀번호}
+			</if>
+		WHERE 사용자ID = #{사용자ID}
+	</update>
+
+	<!-- 사용자 삭제 -->
+	<delete id="deleteUser" parameterType="int">
+		DELETE FROM 사용자
+		WHERE 사용자ID = #{사용자ID}
+	</delete>
+
+	<!-- 로그인 검증 (기존 메서드 호환) -->
+	<select id="getLogin" resultType="int">
+		SELECT COUNT(*) 
+		FROM 사용자
+		WHERE 이메일 = #{이메일} AND 비밀번호 = #{비밀번호}
+	</select>
+
+	<!-- 이메일 중복 체크 -->
+	<select id="checkEmailExists" parameterType="string" resultType="int">
+		SELECT COUNT(*) 
+		FROM 사용자
+		WHERE 이메일 = #{이메일}
+	</select>
+
+	<!-- 전체 사용자 수 조회 -->
+	<select id="selectUserCount" parameterType="com.farm404.samyang.dto.UserDTO" resultType="int">
+		SELECT COUNT(*) 
+		FROM 사용자
+		<where>
+			<if test="검색키워드 != null and 검색키워드 != ''">
+				AND (이름 LIKE CONCAT('%', #{검색키워드}, '%') 
+				 OR 이메일 LIKE CONCAT('%', #{검색키워드}, '%'))
+			</if>
+		</where>
+	</select>
+
 </mapper>
