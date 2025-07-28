@@ -6,20 +6,20 @@
 
 	<!-- 결과 매핑 정의 -->
 	<resultMap id="UserResultMap" type="com.farm404.samyang.dto.UserDTO">
-		<id property="userId" column="user_id" />
-		<result property="name" column="name" />
-		<result property="email" column="email" />
-		<result property="password" column="password" />
-		<result property="phone" column="phone" />
-		<result property="address" column="address" />
-		<result property="isAdmin" column="is_admin" />
-		<result property="createdAt" column="created_at" />
+		<id property="userId" column="사용자ID" />
+		<result property="name" column="이름" />
+		<result property="email" column="이메일" />
+		<result property="password" column="비밀번호" />
+		<result property="phone" column="전화번호" />
+		<result property="address" column="주소" />
+		<result property="isAdmin" column="관리자여부" />
+		<result property="createdAt" column="가입일시" />
 	</resultMap>
 
 	<!-- 사용자 등록 -->
 	<insert id="insertUser" parameterType="com.farm404.samyang.dto.UserDTO" useGeneratedKeys="true" keyProperty="userId">
-		INSERT INTO User (
-			name, email, password, phone, address, is_admin
+		INSERT INTO 사용자 (
+			이름, 이메일, 비밀번호, 전화번호, 주소, 관리자여부
 		) VALUES (
 			#{name}, #{email}, #{password}, #{phone}, #{address}, #{isAdmin}
 		)
@@ -28,73 +28,73 @@
 	<!-- 사용자 목록 조회 -->
 	<select id="selectUserList" parameterType="com.farm404.samyang.dto.UserDTO" resultMap="UserResultMap">
 		SELECT 
-			user_id, name, email, phone, address, is_admin, created_at
-		FROM User
+			사용자ID, 이름, 이메일, 전화번호, 주소, 관리자여부, 가입일시
+		FROM 사용자
 		<where>
 			<if test="searchKeyword != null and searchKeyword != ''">
-				AND (name LIKE CONCAT('%', #{searchKeyword}, '%') 
-				 OR email LIKE CONCAT('%', #{searchKeyword}, '%'))
+				AND (이름 LIKE CONCAT('%', #{searchKeyword}, '%') 
+				 OR 이메일 LIKE CONCAT('%', #{searchKeyword}, '%'))
 			</if>
 		</where>
-		ORDER BY created_at DESC
+		ORDER BY 가입일시 DESC
 	</select>
 
 	<!-- 사용자 상세 조회 -->
 	<select id="selectUserById" parameterType="int" resultMap="UserResultMap">
 		SELECT 
-			user_id, name, email, phone, address, is_admin, created_at
-		FROM User
-		WHERE user_id = #{userId}
+			사용자ID, 이름, 이메일, 전화번호, 주소, 관리자여부, 가입일시
+		FROM 사용자
+		WHERE 사용자ID = #{userId}
 	</select>
 
 	<!-- 이메일로 사용자 조회 (로그인용) -->
 	<select id="selectUserByEmail" parameterType="string" resultMap="UserResultMap">
 		SELECT 
-			user_id, name, email, password, phone, address, is_admin, created_at
-		FROM User
-		WHERE email = #{email}
+			사용자ID, 이름, 이메일, 비밀번호, 전화번호, 주소, 관리자여부, 가입일시
+		FROM 사용자
+		WHERE 이메일 = #{email}
 	</select>
 
 	<!-- 사용자 정보 수정 -->
 	<update id="updateUser" parameterType="com.farm404.samyang.dto.UserDTO">
-		UPDATE User SET
-			name = #{name},
-			phone = #{phone},
-			address = #{address}
+		UPDATE 사용자 SET
+			이름 = #{name},
+			전화번호 = #{phone},
+			주소 = #{address}
 			<if test="password != null and password != ''">
-				, password = #{password}
+				, 비밀번호 = #{password}
 			</if>
-		WHERE user_id = #{userId}
+		WHERE 사용자ID = #{userId}
 	</update>
 
 	<!-- 사용자 삭제 -->
 	<delete id="deleteUser" parameterType="int">
-		DELETE FROM User
-		WHERE user_id = #{userId}
+		DELETE FROM 사용자
+		WHERE 사용자ID = #{userId}
 	</delete>
 
 	<!-- 로그인 검증 (기존 메서드 호환) -->
 	<select id="getLogin" resultType="int">
 		SELECT COUNT(*) 
-		FROM User
-		WHERE email = #{email} AND password = #{password}
+		FROM 사용자
+		WHERE 이메일 = #{email} AND 비밀번호 = #{password}
 	</select>
 
 	<!-- 이메일 중복 체크 -->
 	<select id="checkEmailExists" parameterType="string" resultType="int">
 		SELECT COUNT(*) 
-		FROM User
-		WHERE email = #{email}
+		FROM 사용자
+		WHERE 이메일 = #{email}
 	</select>
 
 	<!-- 전체 사용자 수 조회 -->
 	<select id="selectUserCount" parameterType="com.farm404.samyang.dto.UserDTO" resultType="int">
 		SELECT COUNT(*) 
-		FROM User
+		FROM 사용자
 		<where>
 			<if test="searchKeyword != null and searchKeyword != ''">
-				AND (name LIKE CONCAT('%', #{searchKeyword}, '%') 
-				 OR email LIKE CONCAT('%', #{searchKeyword}, '%'))
+				AND (이름 LIKE CONCAT('%', #{searchKeyword}, '%') 
+				 OR 이메일 LIKE CONCAT('%', #{searchKeyword}, '%'))
 			</if>
 		</where>
 	</select>

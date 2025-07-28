@@ -1,3 +1,6 @@
+server:
+  port: 8090
+
 spring:
   application:
     name: 'samyang'
@@ -21,3 +24,10 @@ logging:
   level:
     com.farm404.samyang: DEBUG
     org.springframework.jdbc: DEBUG
+    org.springframework.web: DEBUG
+    org.mybatis: DEBUG
+  file:
+    name: app.log
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
