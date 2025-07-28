@@ -208,15 +208,3 @@ CREATE USER 'samyang_user'@'localhost' IDENTIFIED BY 'secure_password';
 GRANT ALL PRIVILEGES ON samyang_db.* TO 'samyang_user'@'localhost';
 FLUSH PRIVILEGES;
 ```
-
-## 인덱스 최적화 권장사항
-
-```sql
--- 검색 성능 향상을 위한 인덱스
-CREATE INDEX idx_user_email ON 사용자(이메일);
-CREATE INDEX idx_product_category ON 상품(카테고리);
-CREATE INDEX idx_order_date ON 주문(주문일시);
-CREATE INDEX idx_post_user_date ON 게시물(사용자ID, 작성일시);
-CREATE INDEX idx_comment_post ON 댓글(게시물ID);
-CREATE INDEX idx_review_product ON 리뷰(주문상품ID);
-```
