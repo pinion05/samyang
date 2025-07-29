@@ -21,6 +21,7 @@ public class CropDTO {
     private LocalDate plantingDate;
     private LocalDate expectedHarvestDate;
     private String status;
+    private Double plantingArea; // 재배 면적 (㎡)
     
     // 조인 관련 필드
     private String userName; // 작물 목록에서 사용자 이름 표시용

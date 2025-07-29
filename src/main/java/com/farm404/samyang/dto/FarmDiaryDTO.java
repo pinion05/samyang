@@ -21,6 +21,8 @@ public class FarmDiaryDTO {
     private LocalDate date;
     private String activityType;
     private String content;
+    private String title; // 일지 제목
+    private String weatherCondition; // 날씨 정보
     private String photoUrl;
     private LocalDateTime createdAt;
     
@@ -33,4 +35,12 @@ public class FarmDiaryDTO {
     private String activityFilter; // 활동 유형별 필터링용
     private LocalDate startDate; // 기간 검색용
     private LocalDate endDate; // 기간 검색용
+    
+    /**
+     * JSP에서 workDate 속성으로 접근할 수 있는 메서드
+     * @return 작업 날짜
+     */
+    public LocalDate getWorkDate() {
+        return this.date;
+    }
 }

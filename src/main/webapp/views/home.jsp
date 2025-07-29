@@ -116,7 +116,7 @@
                                             </td>
                                             <td>${user.이메일}</td>
                                             <td>
-                                                <fmt:formatDate value="${user.가입일시}" pattern="MM-dd HH:mm" />
+                                                ${user.가입일시.format(java.time.format.DateTimeFormatter.ofPattern("MM-dd HH:mm"))}
                                             </td>
                                         </tr>
                                     </c:forEach>
@@ -170,7 +170,7 @@
                                                 <span class="badge bg-secondary">${crop.상태}</span>
                                             </td>
                                             <td>
-                                                <fmt:formatDate value="${crop.심은날짜}" pattern="MM-dd" />
+                                                ${crop.심은날짜.format(java.time.format.DateTimeFormatter.ofPattern("MM-dd"))}
                                             </td>
                                         </tr>
                                     </c:forEach>
@@ -219,7 +219,7 @@
                                     <c:forEach var="diary" items="${recentDiaries}">
                                         <tr>
                                             <td>
-                                                <fmt:formatDate value="${diary.날짜}" pattern="yyyy-MM-dd" />
+                                                ${diary.날짜.format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd"))}
                                             </td>
                                             <td>${diary.사용자이름}</td>
                                             <td>
@@ -250,7 +250,7 @@
                                                 </a>
                                             </td>
                                             <td>
-                                                <fmt:formatDate value="${diary.작성일시}" pattern="MM-dd HH:mm" />
+                                                ${diary.작성일시.format(java.time.format.DateTimeFormatter.ofPattern("MM-dd HH:mm"))}
                                             </td>
                                         </tr>
                                     </c:forEach>

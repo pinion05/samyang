@@ -1,0 +1,1051 @@
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>삼양 농업 플랫폼</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- jQuery -->
+    <script src="/scripts/jquery-3.7.1.js"></script>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <style>
+        .navbar-brand {
+            font-weight: bold;
+            color: #28a745 !important;
+        }
+        
+        .main-content {
+            margin-top: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .card-header {
+            background-color: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+        }
+        
+        .btn-success {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+        
+        .search-form {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        
+        .table-responsive {
+            border-radius: 5px;
+        }
+        
+        .alert {
+            margin-top: 10px;
+        }
+        
+        footer {
+            background-color: #343a40;
+            color: white;
+            padding: 20px 0;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-seedling"></i> 삼양 농업 플랫폼
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/"><i class="fas fa-home"></i> 홈</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-users"></i> 사용자 관리
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/user/list">사용자 목록</a></li>
+                            <li><a class="dropdown-item" href="/user/register">사용자 등록</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-leaf"></i> 작물 관리
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/crop/list">작물 목록</a></li>
+                            <li><a class="dropdown-item" href="/crop/register">작물 등록</a></li>
+                            <li><a class="dropdown-item" href="/crop/harvestable">수확 가능 작물</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-book"></i> 농사일지
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/diary/list">일지 목록</a></li>
+                            <li><a class="dropdown-item" href="/diary/register">일지 작성</a></li>
+                            <li><a class="dropdown-item" href="/diary/recent">최근 일지</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/user/login">
+                            <i class="fas fa-sign-in-alt"></i> 로그인
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Alert Messages -->
+    <div class="container">
+        
+        
+        
+    </div>
+
+    <!-- Main Content -->
+    <div class="container main-content">
+
+<style>
+    .test-result {
+        margin-bottom: 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+    }
+    
+    .test-result.success {
+        border-color: #28a745;
+        background-color: #f8fff9;
+    }
+    
+    .test-result.failed {
+        border-color: #dc3545;
+        background-color: #fff8f8;
+    }
+    
+    .test-header {
+        padding: 15px;
+        border-bottom: 1px solid #ddd;
+        font-weight: bold;
+    }
+    
+    .test-header.success {
+        background-color: #d4edda;
+        color: #155724;
+    }
+    
+    .test-header.failed {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+    
+    .test-body {
+        padding: 15px;
+    }
+    
+    .error-log {
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+        padding: 10px;
+        margin: 10px 0;
+        font-family: 'Courier New', monospace;
+        font-size: 12px;
+        max-height: 300px;
+        overflow-y: auto;
+    }
+    
+    .stack-trace {
+        background-color: #2d3748;
+        color: #e2e8f0;
+        border-radius: 4px;
+        padding: 15px;
+        margin: 10px 0;
+        font-family: 'Courier New', monospace;
+        font-size: 11px;
+        max-height: 400px;
+        overflow-y: auto;
+        white-space: pre-wrap;
+    }
+    
+    .operation-list {
+        list-style: none;
+        padding: 0;
+    }
+    
+    .operation-list li {
+        padding: 5px 0;
+        border-bottom: 1px dotted #ddd;
+    }
+    
+    .operation-list li:last-child {
+        border-bottom: none;
+    }
+    
+    .test-controls {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+    
+    .btn-test {
+        margin: 5px;
+    }
+    
+    .timestamp {
+        font-size: 0.9em;
+        color: #6c757d;
+    }
+    
+    .status-badge {
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+    
+    .status-badge.success {
+        background-color: #28a745;
+        color: white;
+    }
+    
+    .status-badge.failed {
+        background-color: #dc3545;
+        color: white;
+    }
+    
+    .error-summary {
+        background-color: #fff3cd;
+        border: 1px solid #ffeaa7;
+        border-radius: 4px;
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+</style>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h4 class="mb-0">
+                    <i class="fas fa-database"></i> SQL 테스트 및 디버깅 페이지
+                </h4>
+                <small>데이터베이스 연결, CRUD 작업 테스트 및 상세 에러 분석</small>
+            </div>
+            
+            <div class="card-body">
+                <!-- 테스트 컨트롤 섹션 -->
+                <div class="test-controls">
+                    <h5><i class="fas fa-play-circle"></i> 테스트 실행</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <a href="/sqltest" class="btn btn-primary btn-test">
+                                <i class="fas fa-sync"></i> 전체 테스트 다시 실행
+                            </a>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="btn-group" role="group">
+                                <form method="post" action="/sqltest/run" style="display: inline;">
+                                    <input type="hidden" name="testType" value="connection">
+                                    <button type="submit" class="btn btn-outline-secondary btn-test">
+                                        <i class="fas fa-link"></i> 연결 테스트
+                                    </button>
+                                </form>
+                                <form method="post" action="/sqltest/run" style="display: inline;">
+                                    <input type="hidden" name="testType" value="user">
+                                    <button type="submit" class="btn btn-outline-secondary btn-test">
+                                        <i class="fas fa-user"></i> 사용자 테스트
+                                    </button>
+                                </form>
+                                <form method="post" action="/sqltest/run" style="display: inline;">
+                                    <input type="hidden" name="testType" value="crop">
+                                    <button type="submit" class="btn btn-outline-secondary btn-test">
+                                        <i class="fas fa-leaf"></i> 작물 테스트
+                                    </button>
+                                </form>
+                                <form method="post" action="/sqltest/run" style="display: inline;">
+                                    <input type="hidden" name="testType" value="diary">
+                                    <button type="submit" class="btn btn-outline-secondary btn-test">
+                                        <i class="fas fa-book"></i> 일지 테스트
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <p class="timestamp">
+                                <i class="fas fa-clock"></i> 
+                                <strong>테스트 실행 시간:</strong> 
+                                2025-07-29 13:30:27
+                            </p>
+                            
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 에러 로그 요약 -->
+                
+                    <div class="error-summary">
+                        <h5><i class="fas fa-exclamation-triangle text-warning"></i> 에러 로그 요약</h5>
+                        <div class="error-log">
+                            
+                                <div class="text-danger">
+                                    <i class="fas fa-times-circle"></i> [사용자 테스트 실패] SamyangException - 데이터베이스 오류가 발생했습니다.
+                                </div>
+                            
+                                <div class="text-danger">
+                                    <i class="fas fa-times-circle"></i> [작물 테스트 실패] SamyangException - 데이터베이스 오류가 발생했습니다.
+                                </div>
+                            
+                                <div class="text-danger">
+                                    <i class="fas fa-times-circle"></i> [농사일지 테스트 실패] BadSqlGrammarException - 
+### Error querying database.  Cause: java.sql.SQLSyntaxErrorException: Table 'samyang.farm_diary' doesn't exist
+### The error may exist in file [C:\dev\samyang\bin\main\mapper\FarmDiaryMapper.xml]
+### The error may involve com.farm404.samyang.mapper.FarmDiaryMapper.selectFarmDiaryCount-Inline
+### The error occurred while setting parameters
+### SQL: SELECT COUNT(*)          FROM farm_diary
+### Cause: java.sql.SQLSyntaxErrorException: Table 'samyang.farm_diary' doesn't exist
+; bad SQL grammar []
+                                </div>
+                            
+                        </div>
+                    </div>
+                
+                
+                <!-- 테스트 결과 표시 -->
+                
+                    <h5><i class="fas fa-list-check"></i> 테스트 결과</h5>
+                    
+                        <div class="test-result success">
+                            <!-- 테스트 헤더 -->
+                            <div class="test-header success">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <h6 class="mb-0">
+                                            
+                                                
+                                                    <i class="fas fa-check-circle"></i>
+                                                
+                                                
+                                            
+                                            데이터베이스 연결 테스트
+                                        </h6>
+                                    </div>
+                                    <div class="col-md-4 text-end">
+                                        <span class="status-badge success">
+                                            SUCCESS
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 테스트 내용 -->
+                            <div class="test-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p><strong>메시지:</strong> 데이터베이스 연결 성공</p>
+                                        <p class="timestamp">
+                                            <strong>시작 시간:</strong> 
+                                            13:30:26.632
+                                        </p>
+                                        <p class="timestamp">
+                                            <strong>종료 시간:</strong> 
+                                            13:30:26.858
+                                        </p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <!-- 성공 시 상세 정보 -->
+                                        
+                                            <p><strong>상세 정보:</strong> 사용자 테이블 레코드 수: 0</p>
+                                        
+                                        
+                                        <!-- 실패 시 에러 정보 -->
+                                        
+                                    </div>
+                                </div>
+                                
+                                <!-- 작업 내역 -->
+                                
+                                
+                                <!-- 스택 트레이스 -->
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="test-result failed">
+                            <!-- 테스트 헤더 -->
+                            <div class="test-header failed">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <h6 class="mb-0">
+                                            
+                                                
+                                                
+                                                    <i class="fas fa-times-circle"></i>
+                                                
+                                            
+                                            사용자 테이블 CRUD 테스트
+                                        </h6>
+                                    </div>
+                                    <div class="col-md-4 text-end">
+                                        <span class="status-badge failed">
+                                            FAILED
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 테스트 내용 -->
+                            <div class="test-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p><strong>메시지:</strong> 사용자 CRUD 테스트 실패</p>
+                                        <p class="timestamp">
+                                            <strong>시작 시간:</strong> 
+                                            13:30:26.858
+                                        </p>
+                                        <p class="timestamp">
+                                            <strong>종료 시간:</strong> 
+                                            13:30:26.955
+                                        </p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <!-- 성공 시 상세 정보 -->
+                                        
+                                        
+                                        <!-- 실패 시 에러 정보 -->
+                                        
+                                            <div class="alert alert-danger">
+                                                <strong>에러:</strong> 데이터베이스 오류가 발생했습니다.
+                                            </div>
+                                        
+                                    </div>
+                                </div>
+                                
+                                <!-- 작업 내역 -->
+                                
+                                
+                                <!-- 스택 트레이스 -->
+                                
+                                    <h6><i class="fas fa-bug"></i> 상세 스택 트레이스</h6>
+                                    <div class="stack-trace">
+com.farm404.samyang.exception.SamyangException: 데이터베이스 오류가 발생했습니다.
+	at com.farm404.samyang.service.UserService.registerUser(UserService.java:55)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:359)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:380)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:728)
+	at com.farm404.samyang.service.UserService$$SpringCGLIB$$0.registerUser(<generated>)
+	at com.farm404.samyang.controller.SqlTestController.testUserOperations(SqlTestController.java:251)
+	at com.farm404.samyang.controller.SqlTestController.sqlTestPage(SqlTestController.java:60)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:258)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:191)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:986)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:891)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:527)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:614)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:116)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:398)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:903)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1769)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1189)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:658)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:842)
+Caused by: org.springframework.jdbc.BadSqlGrammarException: 
+### Error updating database.  Cause: java.sql.SQLSyntaxErrorException: Unknown column 'is_admin' in 'field list'
+### The error may exist in file [C:\dev\samyang\bin\main\mapper\UserMapper.xml]
+### The error may involve com.farm404.samyang.mapper.UserMapper.insertUser-Inline
+### The error occurred while setting parameters
+### SQL: INSERT INTO User (    name, email, password, is_admin   ) VALUES (    ?, ?, ?, ?   )
+### Cause: java.sql.SQLSyntaxErrorException: Unknown column 'is_admin' in 'field list'
+; bad SQL grammar []
+	at org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator.doTranslate(SQLErrorCodeSQLExceptionTranslator.java:246)
+	at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:107)
+	at org.mybatis.spring.MyBatisExceptionTranslator.translateExceptionIfPossible(MyBatisExceptionTranslator.java:95)
+	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:347)
+	at jdk.proxy2/jdk.proxy2.$Proxy70.insert(Unknown Source)
+	at org.mybatis.spring.SqlSessionTemplate.insert(SqlSessionTemplate.java:224)
+	at org.apache.ibatis.binding.MapperMethod.execute(MapperMethod.java:62)
+	at org.apache.ibatis.binding.MapperProxy$PlainMethodInvoker.invoke(MapperProxy.java:141)
+	at org.apache.ibatis.binding.MapperProxy.invoke(MapperProxy.java:86)
+	at jdk.proxy46/jdk.proxy46.$Proxy209.insertUser(Unknown Source)
+	at com.farm404.samyang.service.UserService.registerUser(UserService.java:47)
+	... 64 more
+Caused by: java.sql.SQLSyntaxErrorException: Unknown column 'is_admin' in 'field list'
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:112)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:114)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:990)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.execute(ClientPreparedStatement.java:384)
+	at com.zaxxer.hikari.pool.ProxyPreparedStatement.execute(ProxyPreparedStatement.java:44)
+	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.execute(HikariProxyPreparedStatement.java)
+	at jdk.internal.reflect.GeneratedMethodAccessor22.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.apache.ibatis.logging.jdbc.PreparedStatementLogger.invoke(PreparedStatementLogger.java:58)
+	at jdk.proxy4/jdk.proxy4.$Proxy81.execute(Unknown Source)
+	at org.apache.ibatis.executor.statement.PreparedStatementHandler.update(PreparedStatementHandler.java:48)
+	at org.apache.ibatis.executor.statement.RoutingStatementHandler.update(RoutingStatementHandler.java:75)
+	at org.apache.ibatis.executor.SimpleExecutor.doUpdate(SimpleExecutor.java:50)
+	at org.apache.ibatis.executor.BaseExecutor.update(BaseExecutor.java:117)
+	at org.apache.ibatis.executor.CachingExecutor.update(CachingExecutor.java:76)
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.update(DefaultSqlSession.java:197)
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.insert(DefaultSqlSession.java:184)
+	at jdk.internal.reflect.GeneratedMethodAccessor212.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:333)
+	... 71 more
+
+                                    </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="test-result failed">
+                            <!-- 테스트 헤더 -->
+                            <div class="test-header failed">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <h6 class="mb-0">
+                                            
+                                                
+                                                
+                                                    <i class="fas fa-times-circle"></i>
+                                                
+                                            
+                                            작물 테이블 CRUD 테스트
+                                        </h6>
+                                    </div>
+                                    <div class="col-md-4 text-end">
+                                        <span class="status-badge failed">
+                                            FAILED
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 테스트 내용 -->
+                            <div class="test-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p><strong>메시지:</strong> 작물 CRUD 테스트 실패</p>
+                                        <p class="timestamp">
+                                            <strong>시작 시간:</strong> 
+                                            13:30:26.955
+                                        </p>
+                                        <p class="timestamp">
+                                            <strong>종료 시간:</strong> 
+                                            13:30:27.095
+                                        </p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <!-- 성공 시 상세 정보 -->
+                                        
+                                        
+                                        <!-- 실패 시 에러 정보 -->
+                                        
+                                            <div class="alert alert-danger">
+                                                <strong>에러:</strong> 데이터베이스 오류가 발생했습니다.
+                                            </div>
+                                        
+                                    </div>
+                                </div>
+                                
+                                <!-- 작업 내역 -->
+                                
+                                
+                                <!-- 스택 트레이스 -->
+                                
+                                    <h6><i class="fas fa-bug"></i> 상세 스택 트레이스</h6>
+                                    <div class="stack-trace">
+com.farm404.samyang.exception.SamyangException: 데이터베이스 오류가 발생했습니다.
+	at com.farm404.samyang.service.UserService.registerUser(UserService.java:55)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:359)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:380)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:728)
+	at com.farm404.samyang.service.UserService$$SpringCGLIB$$0.registerUser(<generated>)
+	at com.farm404.samyang.controller.SqlTestController.testCropOperations(SqlTestController.java:337)
+	at com.farm404.samyang.controller.SqlTestController.sqlTestPage(SqlTestController.java:63)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:258)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:191)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:986)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:891)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:527)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:614)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:116)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:398)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:903)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1769)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1189)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:658)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:842)
+Caused by: org.springframework.jdbc.BadSqlGrammarException: 
+### Error updating database.  Cause: java.sql.SQLSyntaxErrorException: Unknown column 'is_admin' in 'field list'
+### The error may exist in file [C:\dev\samyang\bin\main\mapper\UserMapper.xml]
+### The error may involve com.farm404.samyang.mapper.UserMapper.insertUser-Inline
+### The error occurred while setting parameters
+### SQL: INSERT INTO User (    name, email, password, is_admin   ) VALUES (    ?, ?, ?, ?   )
+### Cause: java.sql.SQLSyntaxErrorException: Unknown column 'is_admin' in 'field list'
+; bad SQL grammar []
+	at org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator.doTranslate(SQLErrorCodeSQLExceptionTranslator.java:246)
+	at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:107)
+	at org.mybatis.spring.MyBatisExceptionTranslator.translateExceptionIfPossible(MyBatisExceptionTranslator.java:95)
+	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:347)
+	at jdk.proxy2/jdk.proxy2.$Proxy70.insert(Unknown Source)
+	at org.mybatis.spring.SqlSessionTemplate.insert(SqlSessionTemplate.java:224)
+	at org.apache.ibatis.binding.MapperMethod.execute(MapperMethod.java:62)
+	at org.apache.ibatis.binding.MapperProxy$PlainMethodInvoker.invoke(MapperProxy.java:141)
+	at org.apache.ibatis.binding.MapperProxy.invoke(MapperProxy.java:86)
+	at jdk.proxy46/jdk.proxy46.$Proxy209.insertUser(Unknown Source)
+	at com.farm404.samyang.service.UserService.registerUser(UserService.java:47)
+	... 64 more
+Caused by: java.sql.SQLSyntaxErrorException: Unknown column 'is_admin' in 'field list'
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:112)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:114)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:990)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.execute(ClientPreparedStatement.java:384)
+	at com.zaxxer.hikari.pool.ProxyPreparedStatement.execute(ProxyPreparedStatement.java:44)
+	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.execute(HikariProxyPreparedStatement.java)
+	at jdk.internal.reflect.GeneratedMethodAccessor22.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.apache.ibatis.logging.jdbc.PreparedStatementLogger.invoke(PreparedStatementLogger.java:58)
+	at jdk.proxy4/jdk.proxy4.$Proxy81.execute(Unknown Source)
+	at org.apache.ibatis.executor.statement.PreparedStatementHandler.update(PreparedStatementHandler.java:48)
+	at org.apache.ibatis.executor.statement.RoutingStatementHandler.update(RoutingStatementHandler.java:75)
+	at org.apache.ibatis.executor.SimpleExecutor.doUpdate(SimpleExecutor.java:50)
+	at org.apache.ibatis.executor.BaseExecutor.update(BaseExecutor.java:117)
+	at org.apache.ibatis.executor.CachingExecutor.update(CachingExecutor.java:76)
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.update(DefaultSqlSession.java:197)
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.insert(DefaultSqlSession.java:184)
+	at jdk.internal.reflect.GeneratedMethodAccessor212.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:333)
+	... 71 more
+
+                                    </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="test-result failed">
+                            <!-- 테스트 헤더 -->
+                            <div class="test-header failed">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <h6 class="mb-0">
+                                            
+                                                
+                                                
+                                                    <i class="fas fa-times-circle"></i>
+                                                
+                                            
+                                            농사일지 테이블 CRUD 테스트
+                                        </h6>
+                                    </div>
+                                    <div class="col-md-4 text-end">
+                                        <span class="status-badge failed">
+                                            FAILED
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 테스트 내용 -->
+                            <div class="test-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p><strong>메시지:</strong> 농사일지 CRUD 테스트 실패</p>
+                                        <p class="timestamp">
+                                            <strong>시작 시간:</strong> 
+                                            13:30:27.095
+                                        </p>
+                                        <p class="timestamp">
+                                            <strong>종료 시간:</strong> 
+                                            13:30:27.217
+                                        </p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <!-- 성공 시 상세 정보 -->
+                                        
+                                        
+                                        <!-- 실패 시 에러 정보 -->
+                                        
+                                            <div class="alert alert-danger">
+                                                <strong>에러:</strong> 
+### Error querying database.  Cause: java.sql.SQLSyntaxErrorException: Table 'samyang.farm_diary' doesn't exist
+### The error may exist in file [C:\dev\samyang\bin\main\mapper\FarmDiaryMapper.xml]
+### The error may involve com.farm404.samyang.mapper.FarmDiaryMapper.selectFarmDiaryCount-Inline
+### The error occurred while setting parameters
+### SQL: SELECT COUNT(*)          FROM farm_diary
+### Cause: java.sql.SQLSyntaxErrorException: Table 'samyang.farm_diary' doesn't exist
+; bad SQL grammar []
+                                            </div>
+                                        
+                                    </div>
+                                </div>
+                                
+                                <!-- 작업 내역 -->
+                                
+                                
+                                <!-- 스택 트레이스 -->
+                                
+                                    <h6><i class="fas fa-bug"></i> 상세 스택 트레이스</h6>
+                                    <div class="stack-trace">
+org.springframework.jdbc.BadSqlGrammarException: 
+### Error querying database.  Cause: java.sql.SQLSyntaxErrorException: Table 'samyang.farm_diary' doesn't exist
+### The error may exist in file [C:\dev\samyang\bin\main\mapper\FarmDiaryMapper.xml]
+### The error may involve com.farm404.samyang.mapper.FarmDiaryMapper.selectFarmDiaryCount-Inline
+### The error occurred while setting parameters
+### SQL: SELECT COUNT(*)          FROM farm_diary
+### Cause: java.sql.SQLSyntaxErrorException: Table 'samyang.farm_diary' doesn't exist
+; bad SQL grammar []
+	at org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator.doTranslate(SQLErrorCodeSQLExceptionTranslator.java:246)
+	at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:107)
+	at org.mybatis.spring.MyBatisExceptionTranslator.translateExceptionIfPossible(MyBatisExceptionTranslator.java:95)
+	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:347)
+	at jdk.proxy2/jdk.proxy2.$Proxy70.selectOne(Unknown Source)
+	at org.mybatis.spring.SqlSessionTemplate.selectOne(SqlSessionTemplate.java:154)
+	at org.apache.ibatis.binding.MapperMethod.execute(MapperMethod.java:87)
+	at org.apache.ibatis.binding.MapperProxy$PlainMethodInvoker.invoke(MapperProxy.java:141)
+	at org.apache.ibatis.binding.MapperProxy.invoke(MapperProxy.java:86)
+	at jdk.proxy46/jdk.proxy46.$Proxy210.selectFarmDiaryCount(Unknown Source)
+	at com.farm404.samyang.service.FarmDiaryService.getFarmDiaryCount(FarmDiaryService.java:212)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:359)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:380)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:728)
+	at com.farm404.samyang.service.FarmDiaryService$$SpringCGLIB$$0.getFarmDiaryCount(<generated>)
+	at com.farm404.samyang.controller.SqlTestController.testFarmDiaryOperations(SqlTestController.java:433)
+	at com.farm404.samyang.controller.SqlTestController.sqlTestPage(SqlTestController.java:66)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:258)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:191)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:986)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:891)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:527)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:614)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:116)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:398)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:903)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1769)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1189)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:658)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:842)
+Caused by: java.sql.SQLSyntaxErrorException: Table 'samyang.farm_diary' doesn't exist
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:112)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:114)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:990)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.execute(ClientPreparedStatement.java:384)
+	at com.zaxxer.hikari.pool.ProxyPreparedStatement.execute(ProxyPreparedStatement.java:44)
+	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.execute(HikariProxyPreparedStatement.java)
+	at jdk.internal.reflect.GeneratedMethodAccessor22.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.apache.ibatis.logging.jdbc.PreparedStatementLogger.invoke(PreparedStatementLogger.java:58)
+	at jdk.proxy4/jdk.proxy4.$Proxy81.execute(Unknown Source)
+	at org.apache.ibatis.executor.statement.PreparedStatementHandler.query(PreparedStatementHandler.java:65)
+	at org.apache.ibatis.executor.statement.RoutingStatementHandler.query(RoutingStatementHandler.java:80)
+	at org.apache.ibatis.executor.SimpleExecutor.doQuery(SimpleExecutor.java:65)
+	at org.apache.ibatis.executor.BaseExecutor.queryFromDatabase(BaseExecutor.java:336)
+	at org.apache.ibatis.executor.BaseExecutor.query(BaseExecutor.java:158)
+	at org.apache.ibatis.executor.CachingExecutor.query(CachingExecutor.java:110)
+	at org.apache.ibatis.executor.CachingExecutor.query(CachingExecutor.java:90)
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.selectList(DefaultSqlSession.java:154)
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.selectList(DefaultSqlSession.java:147)
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.selectList(DefaultSqlSession.java:142)
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.selectOne(DefaultSqlSession.java:75)
+	at jdk.internal.reflect.GeneratedMethodAccessor28.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:333)
+	... 71 more
+
+                                    </div>
+                                
+                            </div>
+                        </div>
+                    
+                
+                
+                <!-- 도움말 섹션 -->
+                <div class="mt-4">
+                    <div class="card">
+                        <div class="card-header bg-light">
+                            <h6><i class="fas fa-question-circle"></i> 도움말</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6>테스트 항목</h6>
+                                    <ul>
+                                        <li><strong>연결 테스트:</strong> 데이터베이스 연결 상태 확인</li>
+                                        <li><strong>사용자 테스트:</strong> 사용자 테이블 CRUD 작업</li>
+                                        <li><strong>작물 테스트:</strong> 작물 테이블 CRUD 작업</li>
+                                        <li><strong>일지 테스트:</strong> 농사일지 테이블 조회 작업</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6>상태 코드</h6>
+                                    <ul>
+                                        <li><span class="status-badge success">SUCCESS</span> 테스트 성공</li>
+                                        <li><span class="status-badge failed">FAILED</span> 테스트 실패</li>
+                                    </ul>
+                                    
+                                    <h6 class="mt-3">주의사항</h6>
+                                    <p><small class="text-muted">
+                                        이 페이지는 개발/테스트 목적으로만 사용하세요. 
+                                        프로덕션 환경에서는 접근을 제한해야 합니다.
+                                    </small></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+    </div> <!-- container main-content 종료 -->
+
+    <!-- Footer -->
+    <footer class="mt-auto">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5><i class="fas fa-seedling"></i> 삼양 농업 플랫폼</h5>
+                    <p class="mb-0">농업인을 위한 스마트 농업 관리 시스템</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="mb-0">
+                        <small>
+                            © 2024 삼양 농업 플랫폼. All rights reserved.<br>
+                            MyBatis + Spring Boot + JSP 학습용 프로젝트
+                        </small>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 공통 JavaScript 함수들
+        
+        // 삭제 확인
+        function confirmDelete(message) {
+            return confirm(message || '정말로 삭제하시겠습니까?');
+        }
+        
+        // 폼 제출 전 검증
+        function validateForm(formId) {
+            const form = document.getElementById(formId);
+            const requiredFields = form.querySelectorAll('[required]');
+            
+            for (let field of requiredFields) {
+                if (!field.value.trim()) {
+                    alert('모든 필수 항목을 입력해주세요.');
+                    field.focus();
+                    return false;
+                }
+            }
+            return true;
+        }
+        
+        // 날짜 포맷 함수
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('ko-KR');
+        }
+        
+        // 페이지 로드 시 실행
+        $(document).ready(function() {
+            // 테이블 hover 효과
+            $('.table tbody tr').hover(
+                function() { $(this).addClass('table-hover'); },
+                function() { $(this).removeClass('table-hover'); }
+            );
+            
+            // 자동으로 사라지는 알림 메시지
+            setTimeout(function() {
+                $('.alert').fadeOut('slow');
+            }, 5000);
+        });
+    </script>
+
+</body>
+</html>
