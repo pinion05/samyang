@@ -5,6 +5,12 @@
 
 #yml 방식
 #url 뒤에 붙는 ? 는 매개변수
+<<<<<<< Updated upstream
+=======
+server:
+  port: 8080
+
+>>>>>>> Stashed changes
 spring:
  application:
 #프로젝트명
