@@ -1,6 +1,7 @@
 package com.farm404.samyang.controller;
 
 import java.util.List;
+import java.util.ArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory; // Added import for LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,28 +39,43 @@ public class HomeController {
     @GetMapping("/")
     public String home(Model model) {
         try {
-            // 전체 현황 조회
-            int totalUsers = userService.getUserCount(new UserDTO());
-            int totalCrops = cropService.getCropCount(new CropDTO());
-            int totalDiaries = farmDiaryService.getFarmDiaryCount(new FarmDiaryDTO());
+            // 데이터베이스 연결 실패 시 임시 더미 데이터 사용
+            int totalUsers = 0;
+            int totalCrops = 0;
+            int totalDiaries = 0;
+            List<UserDTO> recentUsers = new ArrayList<>();
+            List<CropDTO> recentCrops = new ArrayList<>();
+            List<FarmDiaryDTO> recentDiaries = new ArrayList<>();
+            List<CropDTO> harvestableCrops = new ArrayList<>();
             
-            // 최근 등록된 사용자 (최대 5명)
-            List<UserDTO> recentUsers = userService.getUserList(new UserDTO());
-            if (recentUsers.size() > 5) {
-                recentUsers = recentUsers.subList(0, 5);
+            try {
+                // 전체 현황 조회
+                totalUsers = userService.getUserCount(new UserDTO());
+                totalCrops = cropService.getCropCount(new CropDTO());
+                totalDiaries = farmDiaryService.getFarmDiaryCount(new FarmDiaryDTO());
+                
+                // 최근 등록된 사용자 (최대 5명)
+                recentUsers = userService.getUserList(new UserDTO());
+                if (recentUsers.size() > 5) {
+                    recentUsers = recentUsers.subList(0, 5);
+                }
+                
+                // 최근 등록된 작물 (최대 5개)
+                recentCrops = cropService.getCropList(new CropDTO());
+                if (recentCrops.size() > 5) {
+                    recentCrops = recentCrops.subList(0, 5);
+                }
+                
+                // 최근 농사일지 (최대 5개)
+                recentDiaries = farmDiaryService.getRecentFarmDiaries(5);
+                
+                // 수확 가능한 작물
+                harvestableCrops = cropService.getHarvestableCrops();
+                
+            } catch (Exception dbException) {
+                logger.warn("데이터베이스 연결 실패, 임시 데이터로 처리: {}", dbException.getMessage());
+                // 임시 더미 데이터는 빈 리스트로 유지
             }
-            
-            // 최근 등록된 작물 (최대 5개)
-            List<CropDTO> recentCrops = cropService.getCropList(new CropDTO());
-            if (recentCrops.size() > 5) {
-                recentCrops = recentCrops.subList(0, 5);
-            }
-            
-            // 최근 농사일지 (최대 5개)
-            List<FarmDiaryDTO> recentDiaries = farmDiaryService.getRecentFarmDiaries(5);
-            
-            // 수확 가능한 작물
-            List<CropDTO> harvestableCrops = cropService.getHarvestableCrops();
             
             model.addAttribute("totalUsers", totalUsers);
             model.addAttribute("totalCrops", totalCrops);

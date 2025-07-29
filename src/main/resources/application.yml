@@ -5,6 +5,9 @@
 
 #yml 방식
 #url 뒤에 붙는 ? 는 매개변수
+server:
+  port: 8085
+
 spring:
   application:
     name: 'samyang'
