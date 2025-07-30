@@ -216,6 +216,7 @@ public class UserController {
             
             // 현재 사용자 ID 설정
             user.setUserId(currentUser.getUserId());
+            // TODO: [최소수정] loginId는 이제 email을 사용함
             user.setLoginId(currentUser.getLoginId()); // 로그인 ID는 변경 불가
             user.setRole(currentUser.getRole()); // 권한은 변경 불가
             

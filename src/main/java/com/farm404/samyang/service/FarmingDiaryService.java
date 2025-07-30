@@ -9,6 +9,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
+// TODO: [이상적개선] @Transactional 추가하여 트랜잭션 관리
+// 데이터 변경 작업(register, update, delete)이 있는 Service 클래스에는 필수
 public class FarmingDiaryService {
     
     @Autowired

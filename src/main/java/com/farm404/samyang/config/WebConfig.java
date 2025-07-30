@@ -15,12 +15,15 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        // TODO: [최소수정] webapp 디렉토리의 CSS/JS 파일에 접근하려면 추가 설정 필요
+        // 현재는 classpath:/static/만 참조하므로 src/main/webapp/css, js에 접근 불가
+        // 이상적 해결: 파일을 src/main/resources/static으로 이동
         registry.addResourceHandler("/static/**")
                 .addResourceLocations("classpath:/static/");
         registry.addResourceHandler("/css/**")
-                .addResourceLocations("classpath:/static/css/");
+                .addResourceLocations("classpath:/static/css/", "/css/");  // webapp/css 추가
         registry.addResourceHandler("/js/**")
-                .addResourceLocations("classpath:/static/js/");
+                .addResourceLocations("classpath:/static/js/", "/js/");    // webapp/js 추가
         registry.addResourceHandler("/images/**")
                 .addResourceLocations("classpath:/static/images/");
         registry.addResourceHandler("/upload/**")

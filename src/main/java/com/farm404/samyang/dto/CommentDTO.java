@@ -5,9 +5,13 @@ import java.util.Date;
 public class CommentDTO {
     private Integer commentId;
     private Integer userId;
+    // TODO: [DB매핑불일치] DB에는 PostID가 있지만 Post 테이블이 없음
+    // relatedId와 relatedType으로 다형성 구현 시도 중
+    // 이상적으로는 Post 테이블 생성 후 PostID 사용
     private Integer relatedId;
     private String relatedType; // 'CROP', 'DIARY', 'REVIEW'
     private String content;
+    // TODO: [이상적개선] Date -> LocalDateTime으로 통일
     private Date createdAt;
     private Date updatedAt;
     

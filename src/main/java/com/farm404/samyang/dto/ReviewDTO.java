@@ -5,6 +5,9 @@ import java.time.LocalDateTime;
 public class ReviewDTO {
     private Integer reviewId;
     private Integer userId;
+    // TODO: [DB매핑오류] DB에는 OrderItemID가 있지만 OrderItem 테이블이 없음
+    // productId로 사용 중이지만 Product 테이블도 없음
+    // 이상적으로는 Product, Order, OrderItem 테이블 생성 후 사용
     private Integer productId;
     private Integer rating;
     private String comment;
@@ -88,6 +91,8 @@ public class ReviewDTO {
         this.productName = productName;
     }
     
+    // TODO: [이상적개선] 평점 변환 로직은 Service 레이어로 이동
+    // DTO는 데이터 전달용으로만 사용
     // 평점을 별표로 변환하는 메서드
     public String getStarRating() {
         if (rating == null || rating < 1) return "";

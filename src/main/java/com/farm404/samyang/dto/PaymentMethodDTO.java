@@ -5,11 +5,16 @@ import java.time.LocalDateTime;
 public class PaymentMethodDTO {
     private Integer paymentMethodId;
     private Integer userId;
+    // TODO: [DB매핑오류] paymentType 컬럼이 DB에 존재하지 않음
+    // 실제 DB에는 CardNumber, ExpiryDate, CVC만 존재
     private String paymentType;
     private String cardNumber;
+    // TODO: [DB매핑오류] cardHolderName 컬럼이 DB에 존재하지 않음
     private String cardHolderName;
     private String expiryDate;
+    // TODO: [최소수정] cvv -> cvc로 변경 필요 (DB 컬럼명은 CVC)
     private String cvv;
+    // TODO: [DB매핑오류] billingAddress 컬럼이 DB에 존재하지 않음
     private String billingAddress;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -72,6 +77,16 @@ public class PaymentMethodDTO {
     
     public void setCvv(String cvv) {
         this.cvv = cvv;
+    }
+    
+    // TODO: [임시해결] DB의 CVC 컬럼과 매핑을 위한 getter/setter 추가
+    // 이상적으로는 cvv 대신 cvc로 통일
+    public String getCvc() {
+        return cvv;
+    }
+    
+    public void setCvc(String cvc) {
+        this.cvv = cvc;
     }
     
     public String getBillingAddress() {

@@ -6,6 +6,8 @@ import java.time.LocalDateTime;
 public class FarmingDiaryDTO {
     private Integer farmingDiaryId;
     private Integer userId;
+    // TODO: [날짜타입혼용] LocalDate와 LocalDateTime 혼용 중
+    // 이상적으로는 모든 날짜 필드를 LocalDateTime으로 통일
     private LocalDate date;
     private String activityType;
     private String content;
