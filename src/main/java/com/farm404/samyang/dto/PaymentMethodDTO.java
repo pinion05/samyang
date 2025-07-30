@@ -3,21 +3,26 @@ package com.farm404.samyang.dto;
 import java.time.LocalDateTime;
 
 public class PaymentMethodDTO {
+    // 기본 필드 (DB 스키마와 일치)
     private Integer paymentMethodId;
     private Integer userId;
-    // TODO: [DB매핑오류] paymentType 컬럼이 DB에 존재하지 않음
-    // 실제 DB에는 CardNumber, ExpiryDate, CVC만 존재
-    private String paymentType;
     private String cardNumber;
-    // TODO: [DB매핑오류] cardHolderName 컬럼이 DB에 존재하지 않음
-    private String cardHolderName;
     private String expiryDate;
-    // TODO: [최소수정] cvv -> cvc로 변경 필요 (DB 컬럼명은 CVC)
-    private String cvv;
-    // TODO: [DB매핑오류] billingAddress 컬럼이 DB에 존재하지 않음
-    private String billingAddress;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private String cvc; // DB 컬럼명과 일치
+    
+    // 화면 표시용 추가 필드 (실제 DB에는 없음)
+    @Deprecated
+    private String paymentType; // UI에서만 사용
+    @Deprecated
+    private String cardHolderName; // UI에서만 사용
+    @Deprecated
+    private String billingAddress; // UI에서만 사용
+    @Deprecated
+    private String cvv; // cvc로 통합
+    @Deprecated
+    private LocalDateTime createdAt; // 현재 사용 안함
+    @Deprecated
+    private LocalDateTime updatedAt; // 현재 사용 안함
     
     // Join을 위한 추가 필드
     private String userName;
@@ -71,22 +76,23 @@ public class PaymentMethodDTO {
         this.expiryDate = expiryDate;
     }
     
-    public String getCvv() {
-        return cvv;
-    }
-    
-    public void setCvv(String cvv) {
-        this.cvv = cvv;
-    }
-    
-    // TODO: [임시해결] DB의 CVC 컬럼과 매핑을 위한 getter/setter 추가
-    // 이상적으로는 cvv 대신 cvc로 통일
     public String getCvc() {
-        return cvv;
+        return cvc;
     }
     
     public void setCvc(String cvc) {
-        this.cvv = cvc;
+        this.cvc = cvc;
+    }
+    
+    // 호환성을 위한 deprecated 메소드
+    @Deprecated
+    public String getCvv() {
+        return cvc; // cvv를 cvc로 매핑
+    }
+    
+    @Deprecated
+    public void setCvv(String cvv) {
+        this.cvc = cvv;
     }
     
     public String getBillingAddress() {

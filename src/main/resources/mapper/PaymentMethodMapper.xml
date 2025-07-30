@@ -16,7 +16,7 @@
             pm.CardNumber as cardNumber,
             NULL as cardHolderName,  -- DB에 없는 컬럼  
             pm.ExpiryDate as expiryDate,
-            pm.CVC as cvv,  -- TODO: [최소수정] CVC -> cvv로 매핑 (DTO 필드명 불일치)
+            pm.CVC as cvc,
             NULL as billingAddress,  -- DB에 없는 컬럼
             NULL as createdAt,  -- PaymentMethod 테이블에 없음
             NULL as updatedAt,  -- PaymentMethod 테이블에 없음
@@ -35,7 +35,7 @@
             pm.card_number,
             pm.card_holder_name,
             pm.expiry_date,
-            pm.cvv,
+            pm.CVC as cvc,
             pm.billing_address,
             pm.created_at,
             pm.updated_at,
@@ -55,7 +55,7 @@
             pm.card_number,
             pm.card_holder_name,
             pm.expiry_date,
-            pm.cvv,
+            pm.CVC as cvc,
             pm.billing_address,
             pm.created_at,
             pm.updated_at,
@@ -74,7 +74,7 @@
             pm.card_number,
             pm.card_holder_name,
             pm.expiry_date,
-            pm.cvv,
+            pm.CVC as cvc,
             pm.billing_address,
             pm.created_at,
             pm.updated_at,
@@ -102,7 +102,7 @@
             #{userId},
             #{cardNumber},
             #{expiryDate},
-            #{cvv}  -- TODO: [최소수정] cvv -> cvc로 변경 필요
+            #{cvc}
         )
     </insert>
     
@@ -112,7 +112,7 @@
         SET 
             CardNumber = #{cardNumber},
             ExpiryDate = #{expiryDate},
-            CVC = #{cvv}
+            CVC = #{cvc}
         WHERE PaymentMethodID = #{paymentMethodId}
     </update>
     
@@ -131,7 +131,7 @@
             pm.card_number,
             pm.card_holder_name,
             pm.expiry_date,
-            pm.cvv,
+            pm.CVC as cvc,
             pm.billing_address,
             pm.created_at,
             pm.updated_at,
