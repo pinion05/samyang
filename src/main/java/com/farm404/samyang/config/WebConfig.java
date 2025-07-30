@@ -1,6 +1,7 @@
 package com.farm404.samyang.config;
 
 import com.farm404.samyang.interceptor.AuthInterceptor;
+import com.farm404.samyang.interceptor.SecurityInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -9,9 +10,13 @@ import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
+    
+    @Autowired
+    private SecurityInterceptor securityInterceptor;
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -42,6 +47,12 @@ public class WebConfig implements WebMvcConfigurer {
     
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+        // 보안 인터셉터 (모든 요청에 적용)
+        registry.addInterceptor(securityInterceptor)
+                .addPathPatterns("/**")
+                .excludePathPatterns("/css/**", "/js/**", "/images/**", "/fonts/**", "/static/**");
+        
+        // 인증 인터셉터
         registry.addInterceptor(authInterceptor())
                 .addPathPatterns("/**")
                 .excludePathPatterns("/", "/user/login", "/user/register", "/test/**", 

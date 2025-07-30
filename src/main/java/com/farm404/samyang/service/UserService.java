@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.farm404.samyang.dto.UserDTO;
 import com.farm404.samyang.mapper.UserMapper;
@@ -15,6 +16,9 @@ public class UserService {
 	
 	@Autowired
 	private UserMapper userMapper;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 	
 	public UserDTO getUserById(String id) {
 		return userMapper.selectUserById(id);
@@ -32,6 +36,9 @@ public class UserService {
 	// 또는 UserDTO에 loginId 필드 추가
 	@Transactional // 쓰기 작업이므로 읽기 전용 해제
 	public boolean registerUser(UserDTO user) {
+		// 비밀번호 암호화
+		String encryptedPassword = passwordEncoder.encode(user.getPassword());
+		user.setPassword(encryptedPassword);
 		return userMapper.insertUser(user) > 0;
 	}
 	
@@ -46,7 +53,12 @@ public class UserService {
 	}
 	
 	public UserDTO login(String username, String password) {
-		return userMapper.checkLogin(username, password);
+		// 사용자 조회
+		UserDTO user = userMapper.selectUserByUsername(username);
+		if (user != null && passwordEncoder.matches(password, user.getPassword())) {
+			return user;
+		}
+		return null;
 	}
 	
 	public List<UserDTO> getUserList(UserDTO searchCondition) {
