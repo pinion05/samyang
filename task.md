@@ -73,8 +73,8 @@
 - [x] PaymentMethodMapper 인터페이스 및 XML 작성
 - [x] PaymentMethodService 클래스 구현
 - [x] PaymentMethodController 클래스 구현
-- [ ] payment-list.jsp 화면 구현
-- [ ] payment-form.jsp 화면 구현
+- [x] payment-list.jsp 화면 구현
+- [x] payment-form.jsp 화면 구현
 
 #### 4.2 Review (리뷰) 기능 개발
 - [ ] ReviewDto 클래스 생성
