@@ -109,7 +109,7 @@
 
 #### 6.1 공통 컴포넌트 개발
 - [ ] header.jsp 구현 (네비게이션 메뉴)
-- [ ] footer.jsp 구현
+- [x] footer.jsp 구현
 - [ ] sidebar.jsp 구현 (사이드바 메뉴)
 - [ ] index.jsp 구현 (메인 대시보드)
 
