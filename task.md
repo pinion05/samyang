@@ -115,7 +115,7 @@
 
 #### 6.2 스타일 및 스크립트
 - [x] style.css 작성 (전체 스타일)
-- [ ] main.js 작성 (공통 JavaScript)
+- [x] main.js 작성 (공통 JavaScript)
 - [ ] 반응형 웹 디자인 적용
 - [ ] jQuery 활용한 동적 기능 구현
 
