@@ -32,6 +32,10 @@ public class UserService {
 		return userMapper.selectUserByUsername(username);
 	}
 	
+	public boolean isEmailExists(String email) {
+		return userMapper.checkEmailExists(email) > 0;
+	}
+	
 	@Cacheable(value = "userList")
 	public List<UserDTO> getAllUsers() {
 		return userMapper.selectAllUsers();

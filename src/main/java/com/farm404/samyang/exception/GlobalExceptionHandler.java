@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * 전역 예외 처리기
@@ -111,26 +112,25 @@ public class GlobalExceptionHandler {
      * REST API 예외 처리 (JSON 응답)
      */
     @ExceptionHandler(SamyangException.class)
-    public ResponseEntity<Map<String, Object>> handleSamyangExceptionForApi(
+    @ResponseBody
+    public Object handleSamyangExceptionForRest(
             SamyangException e, HttpServletRequest request) {
         
         if (isApiRequest(request)) {
             String errorId = generateErrorId();
             logError(errorId, e, request);
             
-            Map<String, Object> response = new HashMap<>();
-            response.put("success", false);
-            response.put("errorCode", e.getErrorCode().getCode());
-            response.put("errorMessage", e.getErrorCode().getMessage());
-            response.put("errorDetail", e.getDetail());
-            response.put("errorId", errorId);
-            response.put("timestamp", LocalDateTime.now());
+            com.farm404.samyang.dto.ApiResponse<?> response = 
+                com.farm404.samyang.dto.ApiResponse.error(
+                    e.getErrorCode().getCode(), 
+                    e.getDetail() != null ? e.getDetail() : e.getErrorCode().getMessage()
+                );
             
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
         
-        // API 요청이 아닌 경우 null 반환 (다른 핸들러가 처리)
-        return null;
+        // API 요청이 아닌 경우 웹 똑C로 처리
+        return handleSamyangException(e, request);
     }
     
     /**

@@ -2,6 +2,7 @@ package com.farm404.samyang.config;
 
 import com.farm404.samyang.interceptor.AuthInterceptor;
 import com.farm404.samyang.interceptor.SecurityInterceptor;
+import com.farm404.samyang.interceptor.ApiLoggingInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -17,6 +18,9 @@ public class WebConfig implements WebMvcConfigurer {
     
     @Autowired
     private SecurityInterceptor securityInterceptor;
+    
+    @Autowired
+    private ApiLoggingInterceptor apiLoggingInterceptor;
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -56,7 +60,12 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(authInterceptor())
                 .addPathPatterns("/**")
                 .excludePathPatterns("/", "/user/login", "/user/register", "/test/**", 
-                                   "/static/**", "/css/**", "/js/**", "/images/**", "/upload/**");
+                                   "/static/**", "/css/**", "/js/**", "/images/**", "/upload/**",
+                                   "/api/**"); // API는 별도 인증 처리
+        
+        // API 로깅 인터셉터
+        registry.addInterceptor(apiLoggingInterceptor)
+                .addPathPatterns("/api/**");
     }
     
     @Bean
