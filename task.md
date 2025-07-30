@@ -77,10 +77,10 @@
 - [x] payment-form.jsp 화면 구현
 
 #### 4.2 Review (리뷰) 기능 개발
-- [ ] ReviewDto 클래스 생성
-- [ ] ReviewMapper 인터페이스 및 XML 작성
-- [ ] ReviewService 클래스 구현
-- [ ] ReviewController 클래스 구현
+- [x] ReviewDto 클래스 생성
+- [x] ReviewMapper 인터페이스 및 XML 작성
+- [x] ReviewService 클래스 구현
+- [x] ReviewController 클래스 구현
 - [ ] review-list.jsp 화면 구현
 - [ ] review-detail.jsp 화면 구현
 - [ ] review-form.jsp 화면 구현
