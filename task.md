@@ -111,7 +111,7 @@
 - [ ] header.jsp 구현 (네비게이션 메뉴)
 - [x] footer.jsp 구현
 - [x] sidebar.jsp 구현 (사이드바 메뉴)
-- [ ] index.jsp 구현 (메인 대시보드)
+- [x] index.jsp 구현 (메인 대시보드)
 
 #### 6.2 스타일 및 스크립트
 - [ ] style.css 작성 (전체 스타일)
