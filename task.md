@@ -89,12 +89,12 @@
 ### 5단계: 커뮤니티 기능 구현 (2일)
 
 #### 5.1 Comment (댓글) 기능 개발
-- [ ] CommentDto 클래스 생성
-- [ ] CommentMapper 인터페이스 및 XML 작성
-- [ ] CommentService 클래스 구현
-- [ ] CommentController 클래스 구현
-- [ ] comment-list.jsp 화면 구현
-- [ ] comment-form.jsp 화면 구현
+- [x] CommentDto 클래스 생성
+- [x] CommentMapper 인터페이스 및 XML 작성
+- [x] CommentService 클래스 구현
+- [x] CommentController 클래스 구현
+- [x] comment-list.jsp 화면 구현
+- [x] comment-form.jsp 화면 구현
 
 #### 5.2 Report (신고) 기능 개발
 - [ ] ReportDto 클래스 생성
