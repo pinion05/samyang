@@ -26,26 +26,46 @@
         VALUES (#{reporterId}, #{reportedId}, #{reportedType}, #{category}, #{reason}, 'PENDING', NOW())
     </insert>
     
-    <!-- 신고 ID로 조회 -->
-    <select id="selectReportById" parameterType="int" resultMap="reportResultMap">
-        SELECT r.*, 
-               u.name as reporter_name,
-               CASE 
-                   WHEN r.reported_type = 'USER' THEN (SELECT name FROM user WHERE id = r.reported_id)
-                   WHEN r.reported_type = 'CROP' THEN (SELECT crop_name FROM crop WHERE crop_id = r.reported_id)
-                   WHEN r.reported_type = 'DIARY' THEN (SELECT title FROM farmingdiary WHERE diary_id = r.reported_id)
-                   WHEN r.reported_type = 'REVIEW' THEN (SELECT CONCAT('리뷰 #', review_id) FROM review WHERE review_id = r.reported_id)
-                   WHEN r.reported_type = 'COMMENT' THEN (SELECT CONCAT('댓글 #', comment_id) FROM comment WHERE comment_id = r.reported_id)
-               END as reported_title,
-               CASE 
-                   WHEN r.reported_type = 'USER' THEN (SELECT name FROM user WHERE id = r.reported_id)
-                   WHEN r.reported_type = 'CROP' THEN (SELECT u2.name FROM crop c JOIN user u2 ON c.user_id = u2.id WHERE c.crop_id = r.reported_id)
-                   WHEN r.reported_type = 'DIARY' THEN (SELECT u2.name FROM farmingdiary d JOIN user u2 ON d.user_id = u2.id WHERE d.diary_id = r.reported_id)
-                   WHEN r.reported_type = 'REVIEW' THEN (SELECT u2.name FROM review rv JOIN user u2 ON rv.user_id = u2.id WHERE rv.review_id = r.reported_id)
-                   WHEN r.reported_type = 'COMMENT' THEN (SELECT u2.name FROM comment c JOIN user u2 ON c.user_id = u2.id WHERE c.comment_id = r.reported_id)
-               END as reported_user_name
+    <!-- 신고 ID로 조회 (최적화됨) -->
+    <select id="selectReportById" parameterType="int" resultType="com.farm404.samyang.dto.ReportDetailDTO">
+        SELECT 
+            r.report_id as reportId,
+            r.reporter_id as reporterId,
+            r.reported_id as reportedId,
+            r.reported_type as reportedType,
+            r.category as category,
+            r.reason as reason,
+            r.status as status,
+            r.created_at as createdAt,
+            r.handled_at as handledAt,
+            r.handler_id as handlerId,
+            r.handle_comment as handleComment,
+            u.name as reporterName,
+            COALESCE(
+                u2.name,
+                c.crop_name,
+                fd.title,
+                CONCAT('리뷰 #', rv.review_id),
+                CONCAT('댓글 #', cm.comment_id)
+            ) as reportedTitle,
+            COALESCE(
+                u2.name,
+                cu.name,
+                du.name,
+                ru.name,
+                cmu.name
+            ) as reportedUserName
         FROM report r
         LEFT JOIN user u ON r.reporter_id = u.id
+        LEFT JOIN user u2 ON r.reported_type = 'USER' AND r.reported_id = u2.id
+        LEFT JOIN crop c ON r.reported_type = 'CROP' AND r.reported_id = c.crop_id
+        LEFT JOIN user cu ON c.user_id = cu.id
+        LEFT JOIN farmingdiary fd ON r.reported_type = 'DIARY' AND r.reported_id = fd.diary_id
+        LEFT JOIN user du ON fd.user_id = du.id
+        LEFT JOIN review rv ON r.reported_type = 'REVIEW' AND r.reported_id = rv.review_id
+        LEFT JOIN user ru ON rv.user_id = ru.id
+        LEFT JOIN comment cm ON r.reported_type = 'COMMENT' AND r.reported_id = cm.comment_id
+        LEFT JOIN user cmu ON cm.user_id = cmu.id
         WHERE r.report_id = #{reportId}
     </select>
     

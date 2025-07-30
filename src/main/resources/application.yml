@@ -45,3 +45,8 @@ mybatis:
   type-aliases-package: com.farm404.samyang.dto
   configuration:
     map-underscore-to-camel-case: true
+    cache-enabled: true              # 2차 캐시 활성화
+    lazy-loading-enabled: true       # 지연 로딩 활성화
+    aggressive-lazy-loading: false   # 필요한 경우에만 로딩
+    default-executor-type: REUSE     # PreparedStatement 재사용
+    default-statement-timeout: 30    # 쿼리 타임아웃 30초

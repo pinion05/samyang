@@ -29,6 +29,32 @@
 		ORDER BY CreatedAt DESC
 	</select>
 	
+	<!-- 사용자 페이징 조회 -->
+	<select id="selectUsersWithPaging" parameterType="com.farm404.samyang.dto.PageRequest" resultType="com.farm404.samyang.dto.UserDTO">
+		SELECT
+			UserID as userId,
+			Name as name,
+			Email as email,
+			Password as password,
+			PhoneNumber as phoneNumber,
+			Address as address,
+			IsAdmin as isAdmin,
+			CreatedAt as createdAt
+		FROM User
+		<if test="sortBy != null and sortBy != ''">
+			ORDER BY ${sortBy} ${sortDirection}
+		</if>
+		<if test="sortBy == null or sortBy == ''">
+			ORDER BY CreatedAt DESC
+		</if>
+		LIMIT #{size} OFFSET #{offset}
+	</select>
+	
+	<!-- 사용자 총 개수 조회 -->
+	<select id="countUsers" resultType="_long">
+		SELECT COUNT(*) FROM User
+	</select>
+	
 	<!-- 사용자 ID로 조회 -->
 	<select id="getUserById" parameterType="_int" resultType="com.farm404.samyang.dto.UserDTO">
 		SELECT

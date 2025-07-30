@@ -6,6 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.CacheEvict;
 
 import com.farm404.samyang.dto.UserDTO;
 import com.farm404.samyang.mapper.UserMapper;
@@ -20,6 +23,7 @@ public class UserService {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
+	@Cacheable(value = "users", key = "#id")
 	public UserDTO getUserById(String id) {
 		return userMapper.selectUserById(id);
 	}
@@ -28,6 +32,7 @@ public class UserService {
 		return userMapper.selectUserByUsername(username);
 	}
 	
+	@Cacheable(value = "userList")
 	public List<UserDTO> getAllUsers() {
 		return userMapper.selectAllUsers();
 	}
@@ -35,6 +40,7 @@ public class UserService {
 	// TODO: [최소수정] 로그인 로직에서 email을 loginId로 사용하도록 수정 필요
 	// 또는 UserDTO에 loginId 필드 추가
 	@Transactional // 쓰기 작업이므로 읽기 전용 해제
+	@CacheEvict(value = "userList", allEntries = true)
 	public boolean registerUser(UserDTO user) {
 		// 비밀번호 암호화
 		String encryptedPassword = passwordEncoder.encode(user.getPassword());
@@ -43,11 +49,14 @@ public class UserService {
 	}
 	
 	@Transactional // 쓰기 작업이므로 읽기 전용 해제
+	@CachePut(value = "users", key = "#user.userId")
+	@CacheEvict(value = "userList", allEntries = true)
 	public boolean updateUser(UserDTO user) {
 		return userMapper.updateUser(user) > 0;
 	}
 	
 	@Transactional // 쓰기 작업이므로 읽기 전용 해제
+	@CacheEvict(value = {"users", "userList"}, allEntries = true)
 	public boolean deleteUser(String id) {
 		return userMapper.deleteUser(id) > 0;
 	}
