@@ -36,7 +36,7 @@
 #### 2.2 User 관련 화면 개발
 - [x] login.jsp 화면 구현
 - [x] register.jsp 화면 구현
-- [ ] profile.jsp 화면 구현
+- [x] profile.jsp 화면 구현
 - [ ] users.jsp 화면 구현 (관리자용)
 
 #### 2.3 인증 및 세션 관리

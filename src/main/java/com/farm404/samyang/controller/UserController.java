@@ -203,6 +203,74 @@ public class UserController {
     }
     
     /**
+     * 프로필 수정 처리
+     */
+    @PostMapping("/profile/update")
+    public String updateProfile(@ModelAttribute UserDTO user, HttpSession session, 
+                               RedirectAttributes redirectAttributes) {
+        try {
+            UserDTO currentUser = (UserDTO) session.getAttribute("user");
+            if (currentUser == null) {
+                return "redirect:/user/login";
+            }
+            
+            // 현재 사용자 ID 설정
+            user.setUserId(currentUser.getUserId());
+            user.setLoginId(currentUser.getLoginId()); // 로그인 ID는 변경 불가
+            user.setRole(currentUser.getRole()); // 권한은 변경 불가
+            
+            userService.updateProfile(user);
+            
+            // 세션 정보 업데이트
+            UserDTO updatedUser = userService.getUserById(currentUser.getUserId());
+            session.setAttribute("user", updatedUser);
+            
+            redirectAttributes.addFlashAttribute("successMessage", "프로필이 수정되었습니다.");
+            return "redirect:/user/profile";
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/user/profile";
+        }
+    }
+    
+    /**
+     * 비밀번호 변경 처리
+     */
+    @PostMapping("/password/change")
+    public String changePassword(@RequestParam String currentPassword,
+                                @RequestParam String newPassword,
+                                @RequestParam String confirmPassword,
+                                HttpSession session,
+                                RedirectAttributes redirectAttributes) {
+        try {
+            UserDTO currentUser = (UserDTO) session.getAttribute("user");
+            if (currentUser == null) {
+                return "redirect:/user/login";
+            }
+            
+            // 새 비밀번호 확인
+            if (!newPassword.equals(confirmPassword)) {
+                redirectAttributes.addFlashAttribute("errorMessage", "새 비밀번호가 일치하지 않습니다.");
+                return "redirect:/user/profile";
+            }
+            
+            // 비밀번호 변경
+            boolean success = userService.changePassword(currentUser.getUserId(), currentPassword, newPassword);
+            
+            if (success) {
+                redirectAttributes.addFlashAttribute("successMessage", "비밀번호가 변경되었습니다.");
+            } else {
+                redirectAttributes.addFlashAttribute("errorMessage", "현재 비밀번호가 올바르지 않습니다.");
+            }
+            
+            return "redirect:/user/profile";
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/user/profile";
+        }
+    }
+    
+    /**
      * 이메일 중복 체크 API
      */
     @GetMapping("/check-email")
