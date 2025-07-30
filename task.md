@@ -97,13 +97,13 @@
 - [x] comment-form.jsp 화면 구현
 
 #### 5.2 Report (신고) 기능 개발
-- [ ] ReportDto 클래스 생성
-- [ ] ReportMapper 인터페이스 및 XML 작성
-- [ ] ReportService 클래스 구현
-- [ ] ReportController 클래스 구현
-- [ ] report-list.jsp 화면 구현 (관리자용)
-- [ ] report-detail.jsp 화면 구현
-- [ ] report-form.jsp 화면 구현
+- [x] ReportDto 클래스 생성
+- [x] ReportMapper 인터페이스 및 XML 작성
+- [x] ReportService 클래스 구현
+- [x] ReportController 클래스 구현
+- [x] report-list.jsp 화면 구현 (관리자용)
+- [x] report-detail.jsp 화면 구현
+- [x] report-form.jsp 화면 구현
 
 ### 6단계: UI/UX 개선 및 테스트 (2-3일)
 

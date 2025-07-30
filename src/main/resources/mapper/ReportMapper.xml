@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.farm404.samyang.mapper.ReportMapper">
+
+    <resultMap id="reportResultMap" type="com.farm404.samyang.dto.ReportDTO">
+        <id property="reportId" column="report_id"/>
+        <result property="reporterId" column="reporter_id"/>
+        <result property="reportedId" column="reported_id"/>
+        <result property="reportedType" column="reported_type"/>
+        <result property="category" column="category"/>
+        <result property="reason" column="reason"/>
+        <result property="status" column="status"/>
+        <result property="adminNote" column="admin_note"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="resolvedAt" column="resolved_at"/>
+        <result property="reporterName" column="reporter_name"/>
+        <result property="reportedTitle" column="reported_title"/>
+        <result property="reportedUserName" column="reported_user_name"/>
+    </resultMap>
+    
+    <!-- 신고 등록 -->
+    <insert id="insertReport" parameterType="com.farm404.samyang.dto.ReportDTO">
+        INSERT INTO report (reporter_id, reported_id, reported_type, category, reason, status, created_at)
+        VALUES (#{reporterId}, #{reportedId}, #{reportedType}, #{category}, #{reason}, 'PENDING', NOW())
+    </insert>
+    
+    <!-- 신고 ID로 조회 -->
+    <select id="selectReportById" parameterType="int" resultMap="reportResultMap">
+        SELECT r.*, 
+               u.name as reporter_name,
+               CASE 
+                   WHEN r.reported_type = 'USER' THEN (SELECT name FROM user WHERE id = r.reported_id)
+                   WHEN r.reported_type = 'CROP' THEN (SELECT crop_name FROM crop WHERE crop_id = r.reported_id)
+                   WHEN r.reported_type = 'DIARY' THEN (SELECT title FROM farmingdiary WHERE diary_id = r.reported_id)
+                   WHEN r.reported_type = 'REVIEW' THEN (SELECT CONCAT('리뷰 #', review_id) FROM review WHERE review_id = r.reported_id)
+                   WHEN r.reported_type = 'COMMENT' THEN (SELECT CONCAT('댓글 #', comment_id) FROM comment WHERE comment_id = r.reported_id)
+               END as reported_title,
+               CASE 
+                   WHEN r.reported_type = 'USER' THEN (SELECT name FROM user WHERE id = r.reported_id)
+                   WHEN r.reported_type = 'CROP' THEN (SELECT u2.name FROM crop c JOIN user u2 ON c.user_id = u2.id WHERE c.crop_id = r.reported_id)
+                   WHEN r.reported_type = 'DIARY' THEN (SELECT u2.name FROM farmingdiary d JOIN user u2 ON d.user_id = u2.id WHERE d.diary_id = r.reported_id)
+                   WHEN r.reported_type = 'REVIEW' THEN (SELECT u2.name FROM review rv JOIN user u2 ON rv.user_id = u2.id WHERE rv.review_id = r.reported_id)
+                   WHEN r.reported_type = 'COMMENT' THEN (SELECT u2.name FROM comment c JOIN user u2 ON c.user_id = u2.id WHERE c.comment_id = r.reported_id)
+               END as reported_user_name
+        FROM report r
+        LEFT JOIN user u ON r.reporter_id = u.id
+        WHERE r.report_id = #{reportId}
+    </select>
+    
+    <!-- 전체 신고 목록 조회 (관리자용) -->
+    <select id="selectAllReports" resultMap="reportResultMap">
+        SELECT r.*, 
+               u.name as reporter_name,
+               CASE 
+                   WHEN r.reported_type = 'USER' THEN (SELECT name FROM user WHERE id = r.reported_id)
+                   WHEN r.reported_type = 'CROP' THEN (SELECT crop_name FROM crop WHERE crop_id = r.reported_id)
+                   WHEN r.reported_type = 'DIARY' THEN (SELECT title FROM farmingdiary WHERE diary_id = r.reported_id)
+                   WHEN r.reported_type = 'REVIEW' THEN (SELECT CONCAT('리뷰 #', review_id) FROM review WHERE review_id = r.reported_id)
+                   WHEN r.reported_type = 'COMMENT' THEN (SELECT CONCAT('댓글 #', comment_id) FROM comment WHERE comment_id = r.reported_id)
+               END as reported_title
+        FROM report r
+        LEFT JOIN user u ON r.reporter_id = u.id
+        ORDER BY r.created_at DESC
+    </select>
+    
+    <!-- 상태별 신고 목록 조회 -->
+    <select id="selectReportsByStatus" parameterType="string" resultMap="reportResultMap">
+        SELECT r.*, 
+               u.name as reporter_name,
+               CASE 
+                   WHEN r.reported_type = 'USER' THEN (SELECT name FROM user WHERE id = r.reported_id)
+                   WHEN r.reported_type = 'CROP' THEN (SELECT crop_name FROM crop WHERE crop_id = r.reported_id)
+                   WHEN r.reported_type = 'DIARY' THEN (SELECT title FROM farmingdiary WHERE diary_id = r.reported_id)
+                   WHEN r.reported_type = 'REVIEW' THEN (SELECT CONCAT('리뷰 #', review_id) FROM review WHERE review_id = r.reported_id)
+                   WHEN r.reported_type = 'COMMENT' THEN (SELECT CONCAT('댓글 #', comment_id) FROM comment WHERE comment_id = r.reported_id)
+               END as reported_title
+        FROM report r
+        LEFT JOIN user u ON r.reporter_id = u.id
+        WHERE r.status = #{status}
+        ORDER BY r.created_at DESC
+    </select>
+    
+    <!-- 카테고리별 신고 목록 조회 -->
+    <select id="selectReportsByCategory" parameterType="string" resultMap="reportResultMap">
+        SELECT r.*, 
+               u.name as reporter_name,
+               CASE 
+                   WHEN r.reported_type = 'USER' THEN (SELECT name FROM user WHERE id = r.reported_id)
+                   WHEN r.reported_type = 'CROP' THEN (SELECT crop_name FROM crop WHERE crop_id = r.reported_id)
+                   WHEN r.reported_type = 'DIARY' THEN (SELECT title FROM farmingdiary WHERE diary_id = r.reported_id)
+                   WHEN r.reported_type = 'REVIEW' THEN (SELECT CONCAT('리뷰 #', review_id) FROM review WHERE review_id = r.reported_id)
+                   WHEN r.reported_type = 'COMMENT' THEN (SELECT CONCAT('댓글 #', comment_id) FROM comment WHERE comment_id = r.reported_id)
+               END as reported_title
+        FROM report r
+        LEFT JOIN user u ON r.reporter_id = u.id
+        WHERE r.category = #{category}
+        ORDER BY r.created_at DESC
+    </select>
+    
+    <!-- 신고 유형별 목록 조회 -->
+    <select id="selectReportsByType" parameterType="string" resultMap="reportResultMap">
+        SELECT r.*, 
+               u.name as reporter_name,
+               CASE 
+                   WHEN r.reported_type = 'USER' THEN (SELECT name FROM user WHERE id = r.reported_id)
+                   WHEN r.reported_type = 'CROP' THEN (SELECT crop_name FROM crop WHERE crop_id = r.reported_id)
+                   WHEN r.reported_type = 'DIARY' THEN (SELECT title FROM farmingdiary WHERE diary_id = r.reported_id)
+                   WHEN r.reported_type = 'REVIEW' THEN (SELECT CONCAT('리뷰 #', review_id) FROM review WHERE review_id = r.reported_id)
+                   WHEN r.reported_type = 'COMMENT' THEN (SELECT CONCAT('댓글 #', comment_id) FROM comment WHERE comment_id = r.reported_id)
+               END as reported_title
+        FROM report r
+        LEFT JOIN user u ON r.reporter_id = u.id
+        WHERE r.reported_type = #{reportedType}
+        ORDER BY r.created_at DESC
+    </select>
+    
+    <!-- 사용자의 신고 목록 조회 -->
+    <select id="selectReportsByReporter" parameterType="int" resultMap="reportResultMap">
+        SELECT r.*, 
+               u.name as reporter_name,
+               CASE 
+                   WHEN r.reported_type = 'USER' THEN (SELECT name FROM user WHERE id = r.reported_id)
+                   WHEN r.reported_type = 'CROP' THEN (SELECT crop_name FROM crop WHERE crop_id = r.reported_id)
+                   WHEN r.reported_type = 'DIARY' THEN (SELECT title FROM farmingdiary WHERE diary_id = r.reported_id)
+                   WHEN r.reported_type = 'REVIEW' THEN (SELECT CONCAT('리뷰 #', review_id) FROM review WHERE review_id = r.reported_id)
+                   WHEN r.reported_type = 'COMMENT' THEN (SELECT CONCAT('댓글 #', comment_id) FROM comment WHERE comment_id = r.reported_id)
+               END as reported_title
+        FROM report r
+        LEFT JOIN user u ON r.reporter_id = u.id
+        WHERE r.reporter_id = #{reporterId}
+        ORDER BY r.created_at DESC
+    </select>
+    
+    <!-- 특정 대상에 대한 신고 목록 조회 -->
+    <select id="selectReportsByTarget" resultMap="reportResultMap">
+        SELECT r.*, 
+               u.name as reporter_name,
+               CASE 
+                   WHEN r.reported_type = 'USER' THEN (SELECT name FROM user WHERE id = r.reported_id)
+                   WHEN r.reported_type = 'CROP' THEN (SELECT crop_name FROM crop WHERE crop_id = r.reported_id)
+                   WHEN r.reported_type = 'DIARY' THEN (SELECT title FROM farmingdiary WHERE diary_id = r.reported_id)
+                   WHEN r.reported_type = 'REVIEW' THEN (SELECT CONCAT('리뷰 #', review_id) FROM review WHERE review_id = r.reported_id)
+                   WHEN r.reported_type = 'COMMENT' THEN (SELECT CONCAT('댓글 #', comment_id) FROM comment WHERE comment_id = r.reported_id)
+               END as reported_title
+        FROM report r
+        LEFT JOIN user u ON r.reporter_id = u.id
+        WHERE r.reported_id = #{reportedId} AND r.reported_type = #{reportedType}
+        ORDER BY r.created_at DESC
+    </select>
+    
+    <!-- 신고 상태 업데이트 -->
+    <update id="updateReportStatus">
+        UPDATE report
+        SET status = #{status}
+        WHERE report_id = #{reportId}
+    </update>
+    
+    <!-- 관리자 노트 업데이트 -->
+    <update id="updateAdminNote">
+        UPDATE report
+        SET admin_note = #{adminNote},
+            resolved_at = #{resolvedAt}
+        WHERE report_id = #{reportId}
+    </update>
+    
+    <!-- 신고 삭제 -->
+    <delete id="deleteReport" parameterType="int">
+        DELETE FROM report
+        WHERE report_id = #{reportId}
+    </delete>
+    
+    <!-- 중복 신고 확인 -->
+    <select id="checkDuplicateReport" resultType="int">
+        SELECT COUNT(*)
+        FROM report
+        WHERE reporter_id = #{reporterId}
+        AND reported_id = #{reportedId}
+        AND reported_type = #{reportedType}
+        AND status IN ('PENDING', 'PROCESSING')
+    </select>
+    
+    <!-- 신고 통계 조회 -->
+    <select id="countReportsByStatus" parameterType="string" resultType="int">
+        SELECT COUNT(*)
+        FROM report
+        WHERE status = #{status}
+    </select>
+    
+    <select id="countReportsByCategory" parameterType="string" resultType="int">
+        SELECT COUNT(*)
+        FROM report
+        WHERE category = #{category}
+    </select>
+    
+    <select id="countReportsByType" parameterType="string" resultType="int">
+        SELECT COUNT(*)
+        FROM report
+        WHERE reported_type = #{reportedType}
+    </select>
+    
+</mapper>
