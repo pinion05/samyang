@@ -11,9 +11,19 @@ spring:
   # 데이터베이스 연결 설정
   datasource: 
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://34.47.105.223/samyang?characterEncoding=utf-8&serverTimezone=Asia/Seoul
+    url: jdbc:mysql://34.47.105.223/samyang?characterEncoding=utf-8&serverTimezone=Asia/Seoul&useSSL=false&allowPublicKeyRetrieval=true
     username: root
     password: root
+    hikari:
+      pool-name: Samyang-Pool
+      maximum-pool-size: 20
+      minimum-idle: 5
+      idle-timeout: 300000
+      connection-timeout: 30000
+      max-lifetime: 1800000
+      leak-detection-threshold: 60000
+      connection-test-query: SELECT 1
+      validation-timeout: 5000
    
   # JSP 뷰 설정
   mvc:

@@ -4,13 +4,13 @@ import com.farm404.samyang.dto.FarmingDiaryDTO;
 import com.farm404.samyang.mapper.FarmingDiaryMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Service
-// TODO: [이상적개선] @Transactional 추가하여 트랜잭션 관리
-// 데이터 변경 작업(register, update, delete)이 있는 Service 클래스에는 필수
+@Transactional(readOnly = true) // 기본적으로 읽기 전용 트랜잭션
 public class FarmingDiaryService {
     
     @Autowired
@@ -40,14 +40,17 @@ public class FarmingDiaryService {
         return farmingDiaryMapper.selectAllDiaries();
     }
     
+    @Transactional // 쓰기 작업이므로 읽기 전용 해제
     public boolean registerDiary(FarmingDiaryDTO diary) {
         return farmingDiaryMapper.insertDiary(diary) > 0;
     }
     
+    @Transactional // 쓰기 작업이므로 읽기 전용 해제
     public boolean updateDiary(FarmingDiaryDTO diary) {
         return farmingDiaryMapper.updateDiary(diary) > 0;
     }
     
+    @Transactional // 쓰기 작업이므로 읽기 전용 해제
     public boolean deleteDiary(Integer farmingDiaryId) {
         return farmingDiaryMapper.deleteDiary(farmingDiaryId) > 0;
     }

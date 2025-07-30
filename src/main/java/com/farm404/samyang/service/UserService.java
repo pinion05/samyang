@@ -4,13 +4,13 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.farm404.samyang.dto.UserDTO;
 import com.farm404.samyang.mapper.UserMapper;
 
 @Service
-// TODO: [이상적개선] @Transactional 추가하여 트랜잭션 관리
-// 데이터 변경 작업이 있는 Service 클래스에는 필수
+@Transactional(readOnly = true) // 기본적으로 읽기 전용 트랜잭션
 public class UserService {
 	
 	@Autowired
@@ -30,14 +30,17 @@ public class UserService {
 	
 	// TODO: [최소수정] 로그인 로직에서 email을 loginId로 사용하도록 수정 필요
 	// 또는 UserDTO에 loginId 필드 추가
+	@Transactional // 쓰기 작업이므로 읽기 전용 해제
 	public boolean registerUser(UserDTO user) {
 		return userMapper.insertUser(user) > 0;
 	}
 	
+	@Transactional // 쓰기 작업이므로 읽기 전용 해제
 	public boolean updateUser(UserDTO user) {
 		return userMapper.updateUser(user) > 0;
 	}
 	
+	@Transactional // 쓰기 작업이므로 읽기 전용 해제
 	public boolean deleteUser(String id) {
 		return userMapper.deleteUser(id) > 0;
 	}
