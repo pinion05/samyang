@@ -1,0 +1,43 @@
+nohup: ignoring input
+> Task :compileJava UP-TO-DATE
+> Task :processResources UP-TO-DATE
+> Task :classes UP-TO-DATE
+> Task :resolveMainClassName UP-TO-DATE
+
+> Task :bootRun
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.3)
+
+2025-07-30T14:17:51.179+09:00  INFO 41804 --- [samyang] [  restartedMain] com.farm404.samyang.SamyangApplication   : Starting SamyangApplication using Java 17.0.14 with PID 41804 (C:\dev\samyang\build\classes\java\main started by myung in C:\dev\samyang)
+2025-07-30T14:17:51.183+09:00  INFO 41804 --- [samyang] [  restartedMain] com.farm404.samyang.SamyangApplication   : No active profile set, falling back to 1 default profile: "default"
+2025-07-30T14:17:51.252+09:00  INFO 41804 --- [samyang] [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-07-30T14:17:51.252+09:00  INFO 41804 --- [samyang] [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-07-30T14:17:53.023+09:00  INFO 41804 --- [samyang] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-07-30T14:17:53.047+09:00  INFO 41804 --- [samyang] [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-07-30T14:17:53.048+09:00  INFO 41804 --- [samyang] [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.42]
+2025-07-30T14:17:53.316+09:00  INFO 41804 --- [samyang] [  restartedMain] org.apache.jasper.servlet.TldScanner     : At least one JAR was scanned for TLDs yet contained no TLDs. Enable debug logging for this logger for a complete list of JARs that were scanned but no TLDs were found in them. Skipping unneeded JARs during scanning can improve startup time and JSP compilation time.
+2025-07-30T14:17:53.331+09:00  INFO 41804 --- [samyang] [  restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-07-30T14:17:53.334+09:00  INFO 41804 --- [samyang] [  restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2078 ms
+2025-07-30T14:17:54.213+09:00  INFO 41804 --- [samyang] [  restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2025-07-30T14:17:54.267+09:00  INFO 41804 --- [samyang] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2025-07-30T14:17:54.283+09:00  INFO 41804 --- [samyang] [  restartedMain] com.farm404.samyang.SamyangApplication   : Started SamyangApplication in 3.829 seconds (process running for 4.462)
+2025-07-30T14:21:30.302+09:00  INFO 41804 --- [samyang] [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-07-30T14:21:30.302+09:00  INFO 41804 --- [samyang] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2025-07-30T14:21:30.303+09:00  INFO 41804 --- [samyang] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+=== 이메일 중복 체크 시작 ===
+요청 이메일: shalompmc0505@naver.com
+UserService 호출 전
+2025-07-30T14:34:23.341+09:00  INFO 41804 --- [samyang] [nio-8080-exec-5] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-07-30T14:34:23.866+09:00  INFO 41804 --- [samyang] [nio-8080-exec-5] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@5aa90582
+2025-07-30T14:34:23.869+09:00  INFO 41804 --- [samyang] [nio-8080-exec-5] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+UserService 호출 후 - 중복 체크 결과: false
+=== 회원가입 처리 시작 ===
+사용자 정보: UserDTO(userId=null, name=박명철, email=shalompmc0505@naver.com, password=pmcpmc0505, phoneNumber=, address=, isAdmin=null, createdAt=null, passwordConfirm=pmcpmc0505)
+회원가입 성공

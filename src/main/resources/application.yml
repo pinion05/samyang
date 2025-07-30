@@ -1,34 +1,36 @@
-#spring.application.name=firstProject
-#spring.application.datasource.dirve-class=com.mysql.cj.jdbc.Driver
-#properies 방식
+# Spring Boot Application Configuration for Samyang Agricultural Platform
 
-
-#yml 방식
-#url 뒤에 붙는 ? 는 매개변수
-<<<<<<< Updated upstream
-=======
 server:
   port: 8080
 
->>>>>>> Stashed changes
 spring:
- application:
-#프로젝트명
-  name: 'samyang'
-  #접속할 데이터베이스 설정
- datasource: 
-  dirver-class-name : com.mysql.cj.jdbc.Driver
-  url: jdbc:mysql://34.47.105.223/farm404?charsetEncoding=utf-8
-  username: root
-  password: 6VNS*Z$ARf~j17e=
+  application:
+    name: 'samyang'
+  
+  # 데이터베이스 연결 설정
+  datasource: 
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://34.47.105.223/samyang?characterEncoding=utf-8&serverTimezone=Asia/Seoul
+    username: root
+    password: root
    
- mvc:
-  view:
-   prefix: /views/
-   suffix: .jsp
+  # JSP 뷰 설정
+  mvc:
+    view:
+      prefix: /views/
+      suffix: .jsp
+  
+  # 파일 업로드 설정
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
+      location: C:/dev/samyang/upload
    
+# MyBatis 설정
 mybatis:
- mapper-locations: classpath:/mapper/*.xml
-
-  
-  
+  mapper-locations: classpath:/mapper/*.xml
+  type-aliases-package: com.farm404.samyang.dto
+  configuration:
+    map-underscore-to-camel-case: true

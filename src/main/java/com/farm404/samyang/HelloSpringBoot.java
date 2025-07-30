@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.farm404.samyang.UserDTO.UserDTO;
-import com.farm404.samyang.UserService.UserService;
+import com.farm404.samyang.dto.UserDTO;
+import com.farm404.samyang.service.UserService;
 
 
 
@@ -16,7 +16,7 @@ import com.farm404.samyang.UserService.UserService;
 public class HelloSpringBoot {
 
 	@Autowired
-	private UserService uService;
+	private UserService userService;
 	
 	
     private final SamyangApplication samyangApplication;
@@ -51,14 +51,14 @@ public class HelloSpringBoot {
 	public String conSample(@ModelAttribute UserDTO userVo) {
 		
 		System.out.println("userVo.getName() : " + userVo.getName());
-		System.out.println("userVo.getPwd() : " + userVo.getPwd());
+		System.out.println("userVo.getPassword() : " + userVo.getPassword());
 		System.out.println("userVo() : " + userVo);
 		
-		int getLoginCnt = uService.getLogin(userVo);
+		UserDTO loginUser = userService.login(userVo.getName(), userVo.getPassword());
 		
 		System.out.println("=========================");
-		System.out.println("loginCon" + getLoginCnt);
-		System.out.println("=========================");	
+		System.out.println("loginUser: " + loginUser);
+		System.out.println("=========================");
 		return null;
 	}
 	

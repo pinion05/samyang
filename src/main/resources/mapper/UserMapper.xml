@@ -1,18 +1,123 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-				"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+			"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.farm404.samyang.UserRepository.UserMapper">
 
+	<!-- 로그인 인증 -->
 	<select id="getLogin" parameterType="com.farm404.samyang.UserDTO.UserDTO" resultType="_int">
-	
-			select 
-				count(*) as userCnt 
-			from users
-			where 
-				username = #{name}
-				and password = #{pwd}
-		
+		SELECT
+			COUNT(*) as userCnt
+		FROM User
+		WHERE
+			Name = #{name}
+			AND Password = #{password}
 	</select>
+	
+	<!-- 사용자 전체 조회 -->
+	<select id="getAllUsers" resultType="com.farm404.samyang.UserDTO.UserDTO">
+		SELECT
+			UserID as userId,
+			Name as name,
+			Email as email,
+			Password as password,
+			PhoneNumber as phoneNumber,
+			Address as address,
+			IsAdmin as isAdmin,
+			CreatedAt as createdAt
+		FROM User
+		ORDER BY CreatedAt DESC
+	</select>
+	
+	<!-- 사용자 ID로 조회 -->
+	<select id="getUserById" parameterType="_int" resultType="com.farm404.samyang.UserDTO.UserDTO">
+		SELECT
+			UserID as userId,
+			Name as name,
+			Email as email,
+			Password as password,
+			PhoneNumber as phoneNumber,
+			Address as address,
+			IsAdmin as isAdmin,
+			CreatedAt as createdAt
+		FROM User
+		WHERE UserID = #{userId}
+	</select>
+	
+	<!-- 사용자 등록 -->
+	<insert id="insertUser" parameterType="com.farm404.samyang.UserDTO.UserDTO">
+		INSERT INTO User (
+			Name,
+			Email,
+			Password,
+			PhoneNumber,
+			Address,
+			IsAdmin
+		) VALUES (
+			#{name},
+			#{email},
+			#{password},
+			#{phoneNumber},
+			#{address},
+			#{isAdmin}
+		)
+	</insert>
+	
+	<!-- 사용자 수정 -->
+	<update id="updateUser" parameterType="com.farm404.samyang.UserDTO.UserDTO">
+		UPDATE User SET
+			Name = #{name},
+			Email = #{email},
+			Password = #{password},
+			PhoneNumber = #{phoneNumber},
+			Address = #{address},
+			IsAdmin = #{isAdmin}
+		WHERE UserID = #{userId}
+	</update>
+	
+	<!-- 사용자 삭제 -->
+	<delete id="deleteUser" parameterType="_int">
+		DELETE FROM User
+		WHERE UserID = #{userId}
+	</delete>
+	
+	<!-- 이메일 중복 체크 -->
+	<select id="checkEmailExists" parameterType="String" resultType="_int">
+		SELECT COUNT(*) FROM User WHERE Email = #{email}
+	</select>
+	
+	<!-- 이메일로 로그인 -->
+	<select id="loginByEmail" parameterType="com.farm404.samyang.UserDTO.UserDTO" resultType="com.farm404.samyang.UserDTO.UserDTO">
+		SELECT
+			UserID as userId,
+			Name as name,
+			Email as email,
+			Password as password,
+			PhoneNumber as phoneNumber,
+			Address as address,
+			IsAdmin as isAdmin,
+			CreatedAt as createdAt
+		FROM User
+		WHERE Email = #{email} AND Password = #{password}
+	</select>
+	
+	<!-- 사용자 등록 (registerUser 메서드용) -->
+	<insert id="registerUser" parameterType="com.farm404.samyang.UserDTO.UserDTO">
+		INSERT INTO User (
+			Name,
+			Email,
+			Password,
+			PhoneNumber,
+			Address,
+			IsAdmin
+		) VALUES (
+			#{name},
+			#{email},
+			#{password},
+			#{phoneNumber},
+			#{address},
+			#{isAdmin}
+		)
+	</insert>
 	
 </mapper>

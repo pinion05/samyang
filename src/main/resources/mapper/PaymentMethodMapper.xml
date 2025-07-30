@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.farm404.samyang.mapper.PaymentMethodMapper">
+    
+    <!-- 결제수단 조회 -->
+    <select id="selectPaymentMethodById" resultType="PaymentMethodDTO">
+        SELECT 
+            pm.payment_method_id,
+            pm.user_id,
+            pm.payment_type,
+            pm.card_number,
+            pm.card_holder_name,
+            pm.expiry_date,
+            pm.cvv,
+            pm.billing_address,
+            pm.created_at,
+            pm.updated_at,
+            u.name AS userName
+        FROM payment_method pm
+        LEFT JOIN user u ON pm.user_id = u.user_id
+        WHERE pm.payment_method_id = #{paymentMethodId}
+    </select>
+    
+    <!-- 사용자별 결제수단 목록 조회 -->
+    <select id="selectPaymentMethodsByUserId" resultType="PaymentMethodDTO">
+        SELECT 
+            pm.payment_method_id,
+            pm.user_id,
+            pm.payment_type,
+            pm.card_number,
+            pm.card_holder_name,
+            pm.expiry_date,
+            pm.cvv,
+            pm.billing_address,
+            pm.created_at,
+            pm.updated_at,
+            u.name AS userName
+        FROM payment_method pm
+        LEFT JOIN user u ON pm.user_id = u.user_id
+        WHERE pm.user_id = #{userId}
+        ORDER BY pm.created_at DESC
+    </select>
+    
+    <!-- 모든 결제수단 조회 (관리자용) -->
+    <select id="selectAllPaymentMethods" resultType="PaymentMethodDTO">
+        SELECT 
+            pm.payment_method_id,
+            pm.user_id,
+            pm.payment_type,
+            pm.card_number,
+            pm.card_holder_name,
+            pm.expiry_date,
+            pm.cvv,
+            pm.billing_address,
+            pm.created_at,
+            pm.updated_at,
+            u.name AS userName
+        FROM payment_method pm
+        LEFT JOIN user u ON pm.user_id = u.user_id
+        ORDER BY pm.created_at DESC
+    </select>
+    
+    <!-- 결제수단 타입별 조회 -->
+    <select id="selectPaymentMethodsByType" resultType="PaymentMethodDTO">
+        SELECT 
+            pm.payment_method_id,
+            pm.user_id,
+            pm.payment_type,
+            pm.card_number,
+            pm.card_holder_name,
+            pm.expiry_date,
+            pm.cvv,
+            pm.billing_address,
+            pm.created_at,
+            pm.updated_at,
+            u.name AS userName
+        FROM payment_method pm
+        LEFT JOIN user u ON pm.user_id = u.user_id
+        WHERE pm.user_id = #{userId}
+        <if test="paymentType != null and paymentType != ''">
+            AND pm.payment_type = #{paymentType}
+        </if>
+        ORDER BY pm.created_at DESC
+    </select>
+    
+    <!-- 결제수단 등록 -->
+    <insert id="insertPaymentMethod" parameterType="PaymentMethodDTO">
+        INSERT INTO payment_method (
+            user_id,
+            payment_type,
+            card_number,
+            card_holder_name,
+            expiry_date,
+            cvv,
+            billing_address,
+            created_at,
+            updated_at
+        ) VALUES (
+            #{userId},
+            #{paymentType},
+            #{cardNumber},
+            #{cardHolderName},
+            #{expiryDate},
+            #{cvv},
+            #{billingAddress},
+            NOW(),
+            NOW()
+        )
+    </insert>
+    
+    <!-- 결제수단 수정 -->
+    <update id="updatePaymentMethod" parameterType="PaymentMethodDTO">
+        UPDATE payment_method
+        SET 
+            payment_type = #{paymentType},
+            card_number = #{cardNumber},
+            card_holder_name = #{cardHolderName},
+            expiry_date = #{expiryDate},
+            cvv = #{cvv},
+            billing_address = #{billingAddress},
+            updated_at = NOW()
+        WHERE payment_method_id = #{paymentMethodId}
+    </update>
+    
+    <!-- 결제수단 삭제 -->
+    <delete id="deletePaymentMethod">
+        DELETE FROM payment_method
+        WHERE payment_method_id = #{paymentMethodId}
+    </delete>
+    
+    <!-- 사용자의 기본 결제수단 조회 (가장 최근에 등록된 것) -->
+    <select id="selectDefaultPaymentMethod" resultType="PaymentMethodDTO">
+        SELECT 
+            pm.payment_method_id,
+            pm.user_id,
+            pm.payment_type,
+            pm.card_number,
+            pm.card_holder_name,
+            pm.expiry_date,
+            pm.cvv,
+            pm.billing_address,
+            pm.created_at,
+            pm.updated_at,
+            u.name AS userName
+        FROM payment_method pm
+        LEFT JOIN user u ON pm.user_id = u.user_id
+        WHERE pm.user_id = #{userId}
+        ORDER BY pm.created_at DESC
+        LIMIT 1
+    </select>
+    
+    <!-- 카드번호 중복 체크 -->
+    <select id="checkCardNumberExists" resultType="int">
+        SELECT COUNT(*)
+        FROM payment_method
+        WHERE card_number = #{cardNumber}
+        <if test="excludeId != null">
+            AND payment_method_id != #{excludeId}
+        </if>
+    </select>
+    
+</mapper>

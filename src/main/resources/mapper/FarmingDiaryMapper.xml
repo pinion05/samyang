@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.farm404.samyang.mapper.FarmingDiaryMapper">
+
+    <!-- 결과 매핑 -->
+    <resultMap id="DiaryResultMap" type="com.farm404.samyang.dto.FarmingDiaryDTO">
+        <id property="farmingDiaryId" column="FarmingDiaryID"/>
+        <result property="userId" column="UserID"/>
+        <result property="date" column="Date"/>
+        <result property="activityType" column="ActivityType"/>
+        <result property="content" column="Content"/>
+        <result property="photoUrl" column="PhotoURL"/>
+        <result property="createdAt" column="CreatedAt"/>
+        <result property="userName" column="UserName"/>
+    </resultMap>
+
+    <!-- 농업일지 조회 -->
+    <select id="selectDiaryById" parameterType="Integer" resultMap="DiaryResultMap">
+        SELECT d.*, u.Name as UserName
+        FROM FarmingDiary d
+        LEFT JOIN User u ON d.UserID = u.ID
+        WHERE d.FarmingDiaryID = #{farmingDiaryId}
+    </select>
+
+    <!-- 사용자별 농업일지 목록 조회 -->
+    <select id="selectDiariesByUserId" parameterType="Integer" resultMap="DiaryResultMap">
+        SELECT d.*, u.Name as UserName
+        FROM FarmingDiary d
+        LEFT JOIN User u ON d.UserID = u.ID
+        WHERE d.UserID = #{userId}
+        ORDER BY d.Date DESC, d.FarmingDiaryID DESC
+    </select>
+
+    <!-- 날짜별 농업일지 조회 -->
+    <select id="selectDiariesByDate" parameterType="java.time.LocalDate" resultMap="DiaryResultMap">
+        SELECT d.*, u.Name as UserName
+        FROM FarmingDiary d
+        LEFT JOIN User u ON d.UserID = u.ID
+        WHERE d.Date = #{date}
+        ORDER BY d.FarmingDiaryID DESC
+    </select>
+
+    <!-- 날짜 범위로 농업일지 조회 -->
+    <select id="selectDiariesByDateRange" resultMap="DiaryResultMap">
+        SELECT d.*, u.Name as UserName
+        FROM FarmingDiary d
+        LEFT JOIN User u ON d.UserID = u.ID
+        WHERE d.UserID = #{userId}
+          AND d.Date BETWEEN #{startDate} AND #{endDate}
+        ORDER BY d.Date DESC, d.FarmingDiaryID DESC
+    </select>
+
+    <!-- 활동 유형별 농업일지 조회 -->
+    <select id="selectDiariesByActivityType" resultMap="DiaryResultMap">
+        SELECT d.*, u.Name as UserName
+        FROM FarmingDiary d
+        LEFT JOIN User u ON d.UserID = u.ID
+        WHERE d.UserID = #{userId}
+          AND d.ActivityType = #{activityType}
+        ORDER BY d.Date DESC, d.FarmingDiaryID DESC
+    </select>
+
+    <!-- 모든 농업일지 조회 (관리자용) -->
+    <select id="selectAllDiaries" resultMap="DiaryResultMap">
+        SELECT d.*, u.Name as UserName
+        FROM FarmingDiary d
+        LEFT JOIN User u ON d.UserID = u.ID
+        ORDER BY d.Date DESC, d.FarmingDiaryID DESC
+    </select>
+
+    <!-- 농업일지 등록 -->
+    <insert id="insertDiary" parameterType="com.farm404.samyang.dto.FarmingDiaryDTO" useGeneratedKeys="true" keyProperty="farmingDiaryId">
+        INSERT INTO FarmingDiary (UserID, Date, ActivityType, Content, PhotoURL)
+        VALUES (#{userId}, #{date}, #{activityType}, #{content}, #{photoUrl})
+    </insert>
+
+    <!-- 농업일지 수정 -->
+    <update id="updateDiary" parameterType="com.farm404.samyang.dto.FarmingDiaryDTO">
+        UPDATE FarmingDiary
+        SET Date = #{date},
+            ActivityType = #{activityType},
+            Content = #{content},
+            PhotoURL = #{photoUrl}
+        WHERE FarmingDiaryID = #{farmingDiaryId}
+    </update>
+
+    <!-- 농업일지 삭제 -->
+    <delete id="deleteDiary" parameterType="Integer">
+        DELETE FROM FarmingDiary
+        WHERE FarmingDiaryID = #{farmingDiaryId}
+    </delete>
+
+    <!-- 월별 농업일지 조회 (캘린더용) -->
+    <select id="selectDiariesByMonth" resultMap="DiaryResultMap">
+        SELECT d.*, u.Name as UserName
+        FROM FarmingDiary d
+        LEFT JOIN User u ON d.UserID = u.ID
+        WHERE d.UserID = #{userId}
+          AND YEAR(d.Date) = #{year}
+          AND MONTH(d.Date) = #{month}
+        ORDER BY d.Date ASC, d.FarmingDiaryID ASC
+    </select>
+
+</mapper>
