@@ -5,12 +5,10 @@ import java.time.LocalDateTime;
 public class ReviewDTO {
     private Integer reviewId;
     private Integer userId;
-    // TODO: [DB매핑오류] DB에는 OrderItemID가 있지만 OrderItem 테이블이 없음
-    // productId로 사용 중이지만 Product 테이블도 없음
-    // 이상적으로는 Product, Order, OrderItem 테이블 생성 후 사용
-    private Integer productId;
+    // DB 스키마와 일치하도록 필드명 변경
+    private Integer orderItemId;
     private Integer rating;
-    private String comment;
+    private String content;  // DB의 Content 필드와 일치
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     
@@ -35,12 +33,23 @@ public class ReviewDTO {
         this.userId = userId;
     }
     
-    public Integer getProductId() {
-        return productId;
+    public Integer getOrderItemId() {
+        return orderItemId;
     }
     
+    public void setOrderItemId(Integer orderItemId) {
+        this.orderItemId = orderItemId;
+    }
+    
+    // 호환성을 위한 deprecated 메소드
+    @Deprecated
+    public Integer getProductId() {
+        return orderItemId;
+    }
+    
+    @Deprecated
     public void setProductId(Integer productId) {
-        this.productId = productId;
+        this.orderItemId = productId;
     }
     
     public Integer getRating() {
@@ -51,12 +60,23 @@ public class ReviewDTO {
         this.rating = rating;
     }
     
-    public String getComment() {
-        return comment;
+    public String getContent() {
+        return content;
     }
     
+    public void setContent(String content) {
+        this.content = content;
+    }
+    
+    // 호환성을 위한 deprecated 메소드
+    @Deprecated
+    public String getComment() {
+        return content;
+    }
+    
+    @Deprecated
     public void setComment(String comment) {
-        this.comment = comment;
+        this.content = comment;
     }
     
     public LocalDateTime getCreatedAt() {

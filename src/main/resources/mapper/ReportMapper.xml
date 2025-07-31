@@ -5,25 +5,26 @@
 <mapper namespace="com.farm404.samyang.mapper.ReportMapper">
 
     <resultMap id="reportResultMap" type="com.farm404.samyang.dto.ReportDTO">
-        <id property="reportId" column="report_id"/>
-        <result property="reporterId" column="reporter_id"/>
-        <result property="reportedId" column="reported_id"/>
-        <result property="reportedType" column="reported_type"/>
-        <result property="category" column="category"/>
-        <result property="reason" column="reason"/>
-        <result property="status" column="status"/>
-        <result property="adminNote" column="admin_note"/>
-        <result property="createdAt" column="created_at"/>
-        <result property="resolvedAt" column="resolved_at"/>
+        <id property="reportId" column="ReportID"/>
+        <result property="reporterUserId" column="ReporterUserID"/>
+        <result property="targetId" column="TargetID"/>
+        <result property="reportType" column="ReportType"/>
+        <result property="reason" column="Reason"/>
+        <result property="status" column="Status"/>
+        <result property="reportedAt" column="ReportedAt"/>
         <result property="reporterName" column="reporter_name"/>
         <result property="reportedTitle" column="reported_title"/>
         <result property="reportedUserName" column="reported_user_name"/>
+        <!-- UI전용 필드들 -->
+        <result property="category" column="category"/>
+        <result property="adminNote" column="admin_note"/>
+        <result property="resolvedAt" column="resolved_at"/>
     </resultMap>
     
     <!-- 신고 등록 -->
     <insert id="insertReport" parameterType="com.farm404.samyang.dto.ReportDTO">
-        INSERT INTO report (reporter_id, reported_id, reported_type, category, reason, status, created_at)
-        VALUES (#{reporterId}, #{reportedId}, #{reportedType}, #{category}, #{reason}, 'PENDING', NOW())
+        INSERT INTO Report (ReporterUserID, TargetID, ReportType, Reason, Status, ReportedAt)
+        VALUES (#{reporterUserId}, #{targetId}, #{reportType}, #{reason}, 'Received', NOW())
     </insert>
     
     <!-- 신고 ID로 조회 (최적화됨) -->
@@ -187,8 +188,8 @@
     
     <!-- 신고 삭제 -->
     <delete id="deleteReport" parameterType="int">
-        DELETE FROM report
-        WHERE report_id = #{reportId}
+        DELETE FROM Report
+        WHERE ReportID = #{reportId}
     </delete>
     
     <!-- 중복 신고 확인 -->

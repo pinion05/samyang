@@ -112,16 +112,15 @@
     <insert id="insertReview" parameterType="com.farm404.samyang.dto.ReviewDTO">
         INSERT INTO Review (
             UserID,
-            OrderItemID,  -- TODO: [DB매핑오류] OrderItem 테이블 없음
+            OrderItemID,
             Rating,
-            Comment,
+            Content,
             CreatedAt
-            /* TODO: UpdatedAt 컬럼 없음 */
         ) VALUES (
             #{userId},
-            #{productId},  -- productId를 OrderItemID로 임시 매핑
+            #{orderItemId},
             #{rating},
-            #{comment},
+            #{content},
             NOW()
         )
     </insert>
@@ -131,7 +130,7 @@
         UPDATE Review
         SET 
             Rating = #{rating},
-            Comment = #{comment}
+            Content = #{content}
         WHERE ReviewID = #{reviewId}
     </update>
     

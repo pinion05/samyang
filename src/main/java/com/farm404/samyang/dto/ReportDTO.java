@@ -4,14 +4,17 @@ import java.util.Date;
 
 public class ReportDTO {
     private Integer reportId;
-    private Integer reporterId;
-    private Integer reportedId;
-    private String reportedType; // 'USER', 'CROP', 'DIARY', 'REVIEW', 'COMMENT'
-    private String category; // 'SPAM', 'ABUSE', 'FRAUD', 'INAPPROPRIATE', 'OTHER'
+    // DB 스키마와 일치하도록 필드명 변경
+    private Integer reporterUserId;  // DB: ReporterUserID
+    private Integer targetId;        // DB: TargetID
+    private String reportType;       // DB: ReportType
     private String reason;
-    private String status; // 'PENDING', 'PROCESSING', 'RESOLVED', 'REJECTED'
+    private String status; // DB에는 기본값 'Received'
+    private Date reportedAt;         // DB: ReportedAt
+    
+    // DB에 없는 필드들 (화면 표시용)
+    private String category; // UI용 추가 분류
     private String adminNote;
-    private Date createdAt;
     private Date resolvedAt;
     
     // 조인 필드
@@ -31,28 +34,61 @@ public class ReportDTO {
         this.reportId = reportId;
     }
     
+    public Integer getReporterUserId() {
+        return reporterUserId;
+    }
+    
+    public void setReporterUserId(Integer reporterUserId) {
+        this.reporterUserId = reporterUserId;
+    }
+    
+    // 호환성을 위한 deprecated 메소드
+    @Deprecated
     public Integer getReporterId() {
-        return reporterId;
+        return reporterUserId;
     }
     
+    @Deprecated
     public void setReporterId(Integer reporterId) {
-        this.reporterId = reporterId;
+        this.reporterUserId = reporterId;
     }
     
+    public Integer getTargetId() {
+        return targetId;
+    }
+    
+    public void setTargetId(Integer targetId) {
+        this.targetId = targetId;
+    }
+    
+    // 호환성을 위한 deprecated 메소드
+    @Deprecated
     public Integer getReportedId() {
-        return reportedId;
+        return targetId;
     }
     
+    @Deprecated
     public void setReportedId(Integer reportedId) {
-        this.reportedId = reportedId;
+        this.targetId = reportedId;
     }
     
+    public String getReportType() {
+        return reportType;
+    }
+    
+    public void setReportType(String reportType) {
+        this.reportType = reportType;
+    }
+    
+    // 호환성을 위한 deprecated 메소드
+    @Deprecated
     public String getReportedType() {
-        return reportedType;
+        return reportType;
     }
     
+    @Deprecated
     public void setReportedType(String reportedType) {
-        this.reportedType = reportedType;
+        this.reportType = reportedType;
     }
     
     public String getCategory() {
@@ -87,12 +123,23 @@ public class ReportDTO {
         this.adminNote = adminNote;
     }
     
-    public Date getCreatedAt() {
-        return createdAt;
+    public Date getReportedAt() {
+        return reportedAt;
     }
     
+    public void setReportedAt(Date reportedAt) {
+        this.reportedAt = reportedAt;
+    }
+    
+    // 호환성을 위한 deprecated 메소드
+    @Deprecated
+    public Date getCreatedAt() {
+        return reportedAt;
+    }
+    
+    @Deprecated
     public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
+        this.reportedAt = createdAt;
     }
     
     public Date getResolvedAt() {

@@ -5,9 +5,11 @@ import java.util.Date;
 public class CommentDTO {
     private Integer commentId;
     private Integer userId;
-    // TODO: [DB매핑불일치] DB에는 PostID가 있지만 Post 테이블이 없음
-    // relatedId와 relatedType으로 다형성 구현 시도 중
-    // 이상적으로는 Post 테이블 생성 후 PostID 사용
+    // DB 스키마 필수 필드 추가 (Comment 테이블의 PostID 필드와 매핑)
+    private Integer postId;
+    
+    // TODO: [임시필드] Post 테이블이 없어서 관련 컨텐츠 매핑용으로 사용
+    // 추후 Post 테이블 생성 시 제거 예정
     private Integer relatedId;
     private String relatedType; // 'CROP', 'DIARY', 'REVIEW'
     private String content;
@@ -37,6 +39,14 @@ public class CommentDTO {
     
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+    
+    public Integer getPostId() {
+        return postId;
+    }
+    
+    public void setPostId(Integer postId) {
+        this.postId = postId;
     }
     
     public Integer getRelatedId() {

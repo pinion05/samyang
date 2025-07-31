@@ -5,34 +5,35 @@
 <mapper namespace="com.farm404.samyang.mapper.CommentMapper">
 
     <resultMap id="commentResultMap" type="com.farm404.samyang.dto.CommentDTO">
-        <id property="commentId" column="comment_id"/>
-        <result property="userId" column="user_id"/>
+        <id property="commentId" column="CommentID"/>
+        <result property="userId" column="UserID"/>
+        <result property="postId" column="PostID"/>
         <result property="relatedId" column="related_id"/>
         <result property="relatedType" column="related_type"/>
-        <result property="content" column="content"/>
-        <result property="createdAt" column="created_at"/>
-        <result property="updatedAt" column="updated_at"/>
+        <result property="content" column="Content"/>
+        <result property="createdAt" column="CreatedAt"/>
+        <result property="updatedAt" column="UpdatedAt"/>
         <result property="userName" column="user_name"/>
         <result property="relatedTitle" column="related_title"/>
     </resultMap>
     
     <!-- 댓글 등록 -->
     <insert id="insertComment" parameterType="com.farm404.samyang.dto.CommentDTO">
-        INSERT INTO comment (user_id, related_id, related_type, content, created_at)
-        VALUES (#{userId}, #{relatedId}, #{relatedType}, #{content}, NOW())
+        INSERT INTO Comment (UserID, PostID, Content, CreatedAt, UpdatedAt)
+        VALUES (#{userId}, #{postId}, #{content}, NOW(), NOW())
     </insert>
     
     <!-- 댓글 ID로 조회 -->
     <select id="selectCommentById" parameterType="int" resultMap="commentResultMap">
-        SELECT c.*, u.name as user_name,
+        SELECT c.*, u.Name as user_name,
             CASE 
-                WHEN c.related_type = 'CROP' THEN (SELECT crop_name FROM crop WHERE crop_id = c.related_id)
-                WHEN c.related_type = 'DIARY' THEN (SELECT title FROM farmingdiary WHERE diary_id = c.related_id)
-                WHEN c.related_type = 'REVIEW' THEN (SELECT CONCAT('리뷰 #', review_id) FROM review WHERE review_id = c.related_id)
+                WHEN c.related_type = 'CROP' THEN (SELECT CropName FROM Crop WHERE CropID = c.related_id)
+                WHEN c.related_type = 'DIARY' THEN (SELECT title FROM FarmingDiary WHERE FarmingDiaryID = c.related_id)
+                WHEN c.related_type = 'REVIEW' THEN (SELECT CONCAT('리뷰 #', ReviewID) FROM Review WHERE ReviewID = c.related_id)
             END as related_title
-        FROM comment c
-        LEFT JOIN user u ON c.user_id = u.id
-        WHERE c.comment_id = #{commentId}
+        FROM Comment c
+        LEFT JOIN User u ON c.UserID = u.UserID
+        WHERE c.CommentID = #{commentId}
     </select>
     
     <!-- 특정 컨텐츠의 댓글 목록 조회 -->
@@ -74,16 +75,16 @@
     
     <!-- 댓글 수정 -->
     <update id="updateComment" parameterType="com.farm404.samyang.dto.CommentDTO">
-        UPDATE comment
-        SET content = #{content},
-            updated_at = NOW()
-        WHERE comment_id = #{commentId}
+        UPDATE Comment
+        SET Content = #{content},
+            UpdatedAt = NOW()
+        WHERE CommentID = #{commentId}
     </update>
     
     <!-- 댓글 삭제 -->
     <delete id="deleteComment" parameterType="int">
-        DELETE FROM comment
-        WHERE comment_id = #{commentId}
+        DELETE FROM Comment
+        WHERE CommentID = #{commentId}
     </delete>
     
     <!-- 특정 컨텐츠의 댓글 수 조회 -->
