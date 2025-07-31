@@ -223,7 +223,7 @@ public class UserController {
             userService.updateProfile(user);
             
             // 세션 정보 업데이트
-            UserDTO updatedUser = userService.getUserById(currentUser.getUserId());
+            UserDTO updatedUser = userService.getUserById(String.valueOf(currentUser.getUserId()));
             session.setAttribute("user", updatedUser);
             
             redirectAttributes.addFlashAttribute("successMessage", "프로필이 수정되었습니다.");
@@ -256,7 +256,7 @@ public class UserController {
             }
             
             // 비밀번호 변경
-            boolean success = userService.changePassword(currentUser.getUserId(), currentPassword, newPassword);
+            boolean success = userService.changePassword(String.valueOf(currentUser.getUserId()), currentPassword, newPassword);
             
             if (success) {
                 redirectAttributes.addFlashAttribute("successMessage", "비밀번호가 변경되었습니다.");
