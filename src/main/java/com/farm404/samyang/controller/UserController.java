@@ -52,7 +52,7 @@ public class UserController {
             return "redirect:/user/login";
         }
         
-        UserDTO user = userService.getUserById(currentUser.getId());
+        UserDTO user = userService.getUserById(String.valueOf(currentUser.getUserId()));
         model.addAttribute("user", user);
         return "user/profile";
     }

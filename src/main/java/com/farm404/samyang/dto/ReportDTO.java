@@ -12,6 +12,9 @@ public class ReportDTO {
     private String status; // DB에는 기본값 'Received'
     private Date reportedAt;         // DB: ReportedAt
     
+    // 호환성을 위한 필드 (JSP와 Mapper에서 사용)
+    private String reportedType;     // reportType의 별칭
+    
     // DB에 없는 필드들 (화면 표시용)
     private String category; // UI용 추가 분류
     private String adminNote;
@@ -80,15 +83,14 @@ public class ReportDTO {
         this.reportType = reportType;
     }
     
-    // 호환성을 위한 deprecated 메소드
-    @Deprecated
+    // reportedType 필드 getter/setter (JSP 호환성)
     public String getReportedType() {
-        return reportType;
+        return reportedType != null ? reportedType : reportType;
     }
     
-    @Deprecated
     public void setReportedType(String reportedType) {
-        this.reportType = reportedType;
+        this.reportedType = reportedType;
+        this.reportType = reportedType;  // 두 필드 동기화
     }
     
     public String getCategory() {
