@@ -53,6 +53,18 @@ dependencies {
 	//mysql Connector
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	
+	//Security 설정 (SecurityConfig, PasswordEncoder 사용)
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	
+	//AOP 설정 (LoggingAspect, PerformanceAspect 사용)
+	implementation 'org.springframework.boot:spring-boot-starter-aop'
+	
+	//Validation 설정 (DTO 검증용)
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	
+	//Cache 설정 (CacheConfig 사용)
+	implementation 'org.springframework.boot:spring-boot-starter-cache'
+	
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
